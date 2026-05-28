@@ -1,4 +1,4 @@
-FROM python:3.10-alpine
+FROM cr.yandex/mirror/library/python:3.10-alpine
 
 WORKDIR /gateway
 
