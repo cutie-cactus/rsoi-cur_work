@@ -6,7 +6,8 @@ COPY ./flight_service /flight
 COPY ../config.yaml /flight
 COPY ../requirements.txt /flight
 
-RUN pip3.10 install -r requirements.txt
+RUN pip3.10 install --timeout=40 --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pypi.python.org -r requirements
+.txt
 
 EXPOSE 8060
 
