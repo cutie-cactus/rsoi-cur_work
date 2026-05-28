@@ -1,4 +1,4 @@
-FROM python:3.10-slim-buster
+FROM cr.yandex/mirror/library/python:3.10-slim-buster
 
 WORKDIR /statistics
 
