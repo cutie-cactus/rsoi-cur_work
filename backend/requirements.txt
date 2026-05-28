@@ -1,3 +1,7 @@
+--timeout 40
+--trusted-host pypi.org
+--trusted-host files.pythonhosted.org
+--trusted-host pypi.python.org
 annotated-types==0.5.0
 anyio==3.7.1
 bcrypt==4.2.0
