@@ -35,7 +35,7 @@ class PrivilegeInfoResponse(BaseModel):
 
 class PrivilegeCreate(BaseModel):
     username: Annotated[str, constr(max_length=80)]
-    status: PrivilegeStatus = "STANDARD"
+    status: PrivilegeStatus = "BRONZE"
     balance: Annotated[int, conint(ge=0)] | None = None
 
 

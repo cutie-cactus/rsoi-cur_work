@@ -83,16 +83,9 @@
 
 	.profile-dashboard-grid {
 		display: grid;
-		grid-template-columns: minmax(360px, 0.95fr) minmax(520px, 1.55fr);
+		grid-template-columns: minmax(340px, 0.95fr) minmax(460px, 1.55fr);
 		gap: 1rem;
 		min-height: 0;
-		align-items: start;
-	}
-	.profile-left-column {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-		min-width: 0;
 	}
 	.profile-panel {
 		border-radius: 30px;
@@ -159,55 +152,11 @@
 		font-weight: 700;
 		color: #bfdbfe;
 	}
-	.profile-bonus-title {
+	.profile-bonus-status {
 		margin-top: 0.2rem;
-		font-size: 1.05rem;
-		font-weight: 800;
-		letter-spacing: 0.01em;
-		color: #e0f2fe;
-	}
-	.profile-bonus-description {
-		margin-top: 0.25rem;
-		max-width: 220px;
-		font-size: 0.82rem;
-		font-weight: 650;
-		line-height: 1.25;
-		color: rgba(224, 242, 254, 0.84);
-	}
-	.profile-bonus-meta {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		gap: 0.45rem;
-	}
-	.profile-bonus-tier {
-		padding: 0.34rem 0.72rem;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.17);
-		border: 1px solid rgba(255, 255, 255, 0.26);
-		font-size: 0.78rem;
-		font-weight: 950;
-		letter-spacing: 0.08em;
-	}
-	.profile-bonus-tier-gold {
-		background:
-			radial-gradient(circle at 90% 15%, rgba(250, 204, 21, 0.26), transparent 34%),
-			linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(180, 83, 9, 0.92));
-	}
-	.profile-bonus-tier-silver {
-		background:
-			radial-gradient(circle at 90% 15%, rgba(226, 232, 240, 0.28), transparent 34%),
-			linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(71, 85, 105, 0.94));
-	}
-	.profile-bonus-tier-bronze {
-		background:
-			radial-gradient(circle at 90% 15%, rgba(251, 146, 60, 0.25), transparent 34%),
-			linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(154, 52, 18, 0.94));
-	}
-	.profile-bonus-tier-standard {
-		background:
-			radial-gradient(circle at 90% 15%, rgba(34, 211, 238, 0.18), transparent 32%),
-			linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(37, 99, 235, 0.90));
+		font-size: 1.35rem;
+		font-weight: 900;
+		letter-spacing: 0.04em;
 	}
 	.profile-bonus-balance {
 		font-size: 2.15rem;
@@ -307,11 +256,6 @@
 
 	.profile-history-panel {
 		min-height: 320px;
-		display: flex;
-		flex-direction: column;
-	}
-	.profile-history-panel .detailed-info-body {
-		max-height: 360px;
 	}
 	.detailed-info-body {
 		@apply container flex-grow mx-auto px-5 py-3 rounded-3xl;
@@ -355,17 +299,14 @@
 		.profile-dashboard-grid {
 			grid-template-columns: 1fr;
 		}
-		.profile-left-column {
-			order: 1;
-		}
 		.profile-purchases-panel {
-			order: 2;
 			min-height: 420px;
 		}
 	}
 }
 
-/* Profile v4 fixes: bonus operations are a separate full-width section below the profile grid. */
+
+/* Profile overlap fix: bonus operations stay below the profile grid and purchases list. */
 @layer components {
 	.profile-history-panel {
 		width: 100%;
@@ -374,6 +315,7 @@
 		display: flex;
 		flex-direction: column;
 		overflow: visible;
+		clear: both;
 	}
 
 	.profile-balance-history-list {

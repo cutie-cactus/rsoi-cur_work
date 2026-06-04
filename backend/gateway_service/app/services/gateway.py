@@ -444,9 +444,14 @@ class GatewayService:
         return updated_privilege
 
     def __get_bonus_accrual_coeff(self, privilege_status: str) -> float:
-        # The loyalty program has no visible bronze/silver/gold tiers.
-        # Every passenger receives the same demo accrual coefficient.
-        return 0.1
+        if privilege_status == PrivilegeStatus.GOLD.value:  # noqa: SIM114
+            coeff = 0.1
+        elif privilege_status == PrivilegeStatus.SILVER.value:
+            coeff = 0.1
+        else:
+            coeff = 0.1
+
+        return coeff
 
     async def __paid_ticket(
         self,

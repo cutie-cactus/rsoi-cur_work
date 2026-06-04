@@ -7,7 +7,6 @@ class TicketStatus(str, Enum):
 
 
 class PrivilegeStatus(str, Enum):
-    STANDARD = "STANDARD"
     BRONZE = "BRONZE"
     SILVER = "SILVER"
     GOLD = "GOLD"

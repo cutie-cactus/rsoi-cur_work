@@ -2,7 +2,6 @@ from enum import Enum
 
 
 class PrivilegeStatus(str, Enum):
-    STANDARD = "STANDARD"
     BRONZE = "BRONZE"
     SILVER = "SILVER"
     GOLD = "GOLD"

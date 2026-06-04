@@ -11,18 +11,6 @@ import { IUserInfo } from '../../interfaces/User/IUserInfo';
 import GatewayService from '../../services/GatewayService';
 import { usePrivilegeInfo } from '../../hooks/useAccount/usePrivilegeInfo';
 
-function getPrivilegeStatusInfo(status?: string) {
-	switch (status) {
-		case "GOLD":
-			return { label: "Золотой счёт", badge: "ЗОЛОТОЙ", description: "Максимальный уровень программы лояльности", className: "profile-bonus-tier-gold" };
-		case "SILVER":
-			return { label: "Серебряный счёт", badge: "СЕРЕБРЯНЫЙ", description: "Повышенный уровень программы лояльности", className: "profile-bonus-tier-silver" };
-		case "BRONZE":
-			return { label: "Бронзовый счёт", badge: "БРОНЗОВЫЙ", description: "Базовый уровень программы лояльности", className: "profile-bonus-tier-bronze" };
-		default:
-			return { label: "Стандартный счёт", badge: "STANDARD", description: "Участник программы лояльности", className: "profile-bonus-tier-standard" };
-	}
-}
 
 interface AccountProps {
 	user: IUser
@@ -67,7 +55,7 @@ export function Account({ user }: AccountProps) {
 							<div>
 								<div className="profile-eyebrow">passenger profile</div>
 								<div className="profile-title">Профиль пассажира</div>
-								<div className="profile-subtitle">Персональные данные, бонусный счёт и история покупок в одном кабинете.</div>
+								<div className="profile-subtitle">Персональные данные, бонусный статус и история покупок в одном кабинете.</div>
 							</div>
 							<div className="profile-hero-chip">AeroDesk ID</div>
 						</div>
@@ -83,22 +71,15 @@ export function Account({ user }: AccountProps) {
 
 								<UserInfo user={ user } />
 
-								{ privilegeInfo && (() => {
-									const tier = getPrivilegeStatusInfo(privilegeInfo.status);
-									return (
-										<div className={ `profile-bonus-card ${tier.className}` }>
-											<div>
-												<div className="profile-bonus-label">Бонусный счёт</div>
-												<div className="profile-bonus-title">{ tier.label }</div>
-												<div className="profile-bonus-description">{ tier.description }</div>
-											</div>
-											<div className="profile-bonus-meta">
-												<div className="profile-bonus-tier">{ tier.badge }</div>
-												<div className="profile-bonus-balance">{ privilegeInfo.balance }</div>
-											</div>
+								{ privilegeInfo &&
+									<div className="profile-bonus-card">
+										<div>
+											<div className="profile-bonus-label">Бонусный счёт</div>
+											<div className="profile-bonus-status">{ privilegeInfo.status }</div>
 										</div>
-									);
-								})()}
+										<div className="profile-bonus-balance">{ privilegeInfo.balance }</div>
+									</div>
+								}
 
 								<Alert sx={{ fontSize: 16, borderRadius: 3 }} severity="info">
 									Профиль используется для авторизации, покупки билетов и начисления бонусов.
@@ -123,7 +104,7 @@ export function Account({ user }: AccountProps) {
 								<div className="profile-panel-header">
 									<div>
 										<div className="profile-panel-title">Бонусные операции</div>
-										<div className="profile-panel-subtitle">Начисления и списания по билетам — отдельный блок ниже профиля и покупок</div>
+										<div className="profile-panel-subtitle">Начисления и списания по билетам</div>
 									</div>
 								</div>
 								<BalanceHistory 
