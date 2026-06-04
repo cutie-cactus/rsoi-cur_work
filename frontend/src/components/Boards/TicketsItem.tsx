@@ -6,6 +6,7 @@ import { ConfirmationWindow } from "../ModalWindows/ConfirmationWindow";
 import { TextRow } from "../Texts/TextRow";
 import { RefundIcon } from '../Icons/RefundIcon';
 import { useWindow } from "../../hooks/useWindows/useWindow";
+import { getTripState } from '../../utils/tripStatus';
 
 
 interface TicketsItemProps {
@@ -15,18 +16,23 @@ interface TicketsItemProps {
 
 export function TicketsItem({ ticket, ticketRefund }: TicketsItemProps) {	
 	const confirmDeleteWindow = useWindow();
+	const tripState = getTripState(ticket);
+	const alertSeverity = ticket.status === "CANCELED" ? "warning" : tripState.className === "ticket-state-archived" ? "info" : "success";
 
 	return (
 		<>
-			<div className="tickets-item"> 
+			<div className={`tickets-item ${tripState.className}`}> 
 				<div className="tickets-info">
 
-					<div className="flex flex-row w-full items-center">
-						<div className="w-full font-bold text-2xl text-slate-900">
-							{ `Рейс ${ticket.flightNumber}` }
+					<div className="flex flex-row w-full items-start gap-3">
+						<div className="w-full">
+							<div className="font-bold text-2xl text-slate-900">
+								{ `Рейс ${ticket.flightNumber}` }
+							</div>
+							<div className="ticket-state-caption">{tripState.label}</div>
 						</div>
 
-						{ ticket.status === "PAID" &&
+						{ tripState.canRefund &&
 							<RefundIcon 
 								color="gray"
 								addClassName="px-2 py-2 hover:bg-gray-900/10"
@@ -59,24 +65,13 @@ export function TicketsItem({ ticket, ticketRefund }: TicketsItemProps) {
 					<div className="my-3">
 						<TextRow 
 							label="Тариф"
-							text={ `${ticket.price} ` } 
+							text={ `${ticket.price} ₽` } 
 						/>
 					</div>
 					
-					{ ticket.status === "PAID" 
-						? <Alert
-								sx={{	fontSize: 18 }}
-								severity="success"
-							>
-								{`Оплачен`}
-							</Alert>
-						: <Alert
-								sx={{	fontSize: 18 }}
-								severity="warning"
-							>
-								{`Возвращён`}
-							</Alert>
-					}
+					<Alert sx={{ fontSize: 18, borderRadius: 3 }} severity={alertSeverity}>
+						{tripState.description}
+					</Alert>
 					
 				</div>
 			</div>
@@ -120,7 +115,7 @@ export function TicketsItem({ ticket, ticketRefund }: TicketsItemProps) {
 					<div className="mt-5">
 						<TextRow 
 							label="Тариф"
-							text={ `${ticket.price} ` } 
+							text={ `${ticket.price} ₽` } 
 						/>
 					</div>
 

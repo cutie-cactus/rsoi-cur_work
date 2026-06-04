@@ -20,10 +20,10 @@ export function BalanceHistory({ history, selectDate, selectTime }: BalanceHisto
 	return (
 		<>
 			<div className="detailed-info-body">
-				{ history.map((balanceHistory) => 
+				{ history.map((balanceHistory, index) => 
 						<div 
 							className="my-2"
-							key={ balanceHistory.ticketUid }
+							key={ `${balanceHistory.ticketUid}-${balanceHistory.operationType}-${index}` }
 						>
 							<div className="flex flex-row mt-2">
 								<div 

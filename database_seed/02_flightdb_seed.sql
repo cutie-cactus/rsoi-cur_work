@@ -1,5 +1,5 @@
 -- Seed data for flightdb
--- Рейсы очищаются перед вставкой, чтобы после каждого деплоя демонстрационный набор был одинаковым.
+-- Таблицы аэропортов и рейсов очищаются перед вставкой, чтобы после каждого деплоя демонстрационный набор был одинаковым. Прошедшие рейсы нужны только для архивных билетов.
 
 BEGIN;
 
@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS public.flight (
     from_airport_id integer REFERENCES public.airport(id),
     to_airport_id integer REFERENCES public.airport(id)
 );
+
+TRUNCATE TABLE public.flight, public.airport RESTART IDENTITY CASCADE;
 
 INSERT INTO public.airport (id, name, city, country) VALUES
 (1,  'Шереметьево',                    'Москва',           'Россия'),
@@ -38,9 +40,6 @@ ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
     city = EXCLUDED.city,
     country = EXCLUDED.country;
-
-DELETE FROM public.flight;
-ALTER SEQUENCE public.flight_id_seq RESTART WITH 1;
 
 INSERT INTO public.flight (flight_number, price, datetime, from_airport_id, to_airport_id) VALUES
 -- Прошедшие рейсы, чтобы в разделе билетов были видны старые поездки

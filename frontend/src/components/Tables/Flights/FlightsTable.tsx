@@ -61,7 +61,7 @@ export function FlightsTable({ openMiniDrawer, user }: FlightsTableProps) {
 						<div>
 							<div className="section-eyebrow">flight marketplace</div>
 							<div className="section-title">Подбор авиамаршрута</div>
-							<div className="section-subtitle">Откройте фильтры, выберите направление, дату или диапазон стоимости и оформите покупку.</div>
+							<div className="section-subtitle">Откройте фильтры, выберите направление, дату или стоимость. В витрине покупки показываются только актуальные рейсы.</div>
 						</div>
 						<div className="dashboard-actions">
 							{ filterSummary.length > 0 &&

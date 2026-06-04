@@ -1,4 +1,5 @@
 -- Seed data for bonusdb
+-- Таблицы бонусов очищаются перед вставкой, чтобы история операций соответствовала демо-билетам.
 
 BEGIN;
 
@@ -18,6 +19,8 @@ CREATE TABLE IF NOT EXISTS public.privilege_history (
     operation_type varchar(20) NOT NULL CHECK (operation_type IN ('FILL_IN_BALANCE', 'DEBIT_THE_ACCOUNT'))
 );
 
+TRUNCATE TABLE public.privilege_history, public.privilege RESTART IDENTITY CASCADE;
+
 INSERT INTO public.privilege (username, status, balance) VALUES
 ('ivan',      'GOLD',   2460),
 ('alina',     'SILVER', 1760),
@@ -27,9 +30,6 @@ INSERT INTO public.privilege (username, status, balance) VALUES
 ON CONFLICT (username) DO UPDATE SET
     status = EXCLUDED.status,
     balance = EXCLUDED.balance;
-
-DELETE FROM public.privilege_history;
-ALTER SEQUENCE public.privilege_history_id_seq RESTART WITH 1;
 
 INSERT INTO public.privilege_history (privilege_id, ticket_uid, datetime, balance_diff, operation_type) VALUES
 ((SELECT id FROM public.privilege WHERE username = 'ivan'),      '10000000-0000-4000-8000-000000000001', '2026-05-10 10:15:00',  390, 'FILL_IN_BALANCE'),

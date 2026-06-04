@@ -19,6 +19,11 @@ export function TicketsBoard({ openMiniDrawer, user }: TicketsBoardProps) {
 		handleUpdateTable,
 		ticketRefund,
 	} = useTicketsBoard();
+	const tickets = [...(userInfo?.tickets ?? [])].sort((left, right) => {
+		const leftDate = new Date(left.date.replace(" ", "T")).getTime() || 0;
+		const rightDate = new Date(right.date.replace(" ", "T")).getTime() || 0;
+		return rightDate - leftDate;
+	});
 
 	return (
 		<>
@@ -26,7 +31,7 @@ export function TicketsBoard({ openMiniDrawer, user }: TicketsBoardProps) {
 				<div className="board-hero">
 					<div>
 						<div className="board-hero-title">Личный маршрутный центр</div>
-						<div className="board-hero-subtitle">Ваши активные и возвращённые билеты собраны в виде карточек.</div>
+						<div className="board-hero-subtitle">Ваши активные, возвращённые и архивные билеты собраны в виде карточек.</div>
 					</div>
 					<div className="board-hero-chip">Tickets</div>
 				</div>
@@ -41,7 +46,7 @@ export function TicketsBoard({ openMiniDrawer, user }: TicketsBoardProps) {
 				<div className="board">
 					{ !error
 						?	<div className="tickets-list">
-								{ userInfo?.tickets.map(ticket => 
+								{ tickets.map(ticket => 
 										<TicketsItem 
 											ticket={ ticket }
 											ticketRefund={ ticketRefund }

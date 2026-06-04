@@ -1,4 +1,5 @@
 import axios from "axios";
+import dayjs from "dayjs";
 import { config } from "../config";
 import { SortFlights } from "../enums/SortFlights";
 import { IFilterFlight } from "../interfaces/Flight/IFilterFlight";
@@ -12,6 +13,19 @@ function formatDateParam(value: IFilterFlight["minDate"]): string {
   if (!value) return "";
   if (typeof value === "string") return value;
   return value.format("YYYY-MM-DDTHH:mm:ss");
+}
+
+function getVisibleMinDate(filterMinDate: IFilterFlight["minDate"]): string {
+  const today = dayjs().startOf("day");
+  if (!filterMinDate) return today.format("YYYY-MM-DDTHH:mm:ss");
+
+  const selected = typeof filterMinDate === "string"
+    ? dayjs(filterMinDate)
+    : filterMinDate;
+
+  return selected.isAfter(today)
+    ? selected.format("YYYY-MM-DDTHH:mm:ss")
+    : today.format("YYYY-MM-DDTHH:mm:ss");
 }
 
 const GatewayRequests = {
@@ -29,7 +43,7 @@ const GatewayRequests = {
     if (filterTable.flightNumber) params.set("flightNumber", filterTable.flightNumber);
     if (filterTable.fromAirport) params.set("fromAirport", filterTable.fromAirport);
     if (filterTable.toAirport) params.set("toAirport", filterTable.toAirport);
-    if (filterTable.minDate) params.set("minDatetime", formatDateParam(filterTable.minDate));
+    params.set("minDatetime", getVisibleMinDate(filterTable.minDate));
     if (filterTable.maxDate) params.set("maxDatetime", formatDateParam(filterTable.maxDate));
     if (filterTable.minPrice) params.set("minPrice", String(filterTable.minPrice));
     if (filterTable.maxPrice) params.set("maxPrice", String(filterTable.maxPrice));

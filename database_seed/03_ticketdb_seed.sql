@@ -1,5 +1,5 @@
 -- Seed data for ticketdb
--- Таблица билетов очищается перед вставкой, чтобы старые и новые билеты не дублировались.
+-- Таблица билетов очищается перед вставкой, чтобы активные и архивные покупки не дублировались.
 
 BEGIN;
 
@@ -12,11 +12,10 @@ CREATE TABLE IF NOT EXISTS public.ticket (
     status varchar(20) NOT NULL CHECK (status IN ('PAID', 'CANCELED'))
 );
 
-DELETE FROM public.ticket;
-ALTER SEQUENCE public.ticket_id_seq RESTART WITH 1;
+TRUNCATE TABLE public.ticket RESTART IDENTITY CASCADE;
 
 INSERT INTO public.ticket (ticket_uid, username, flight_number, price, status) VALUES
--- Прошедшие билеты: даты берутся из flightdb по flight_number
+-- Архивные билеты: соответствующие рейсы уже прошли и не показываются в витрине покупки
 ('10000000-0000-4000-8000-000000000001', 'ivan',      'AD001',  3900,  'PAID'),
 ('10000000-0000-4000-8000-000000000002', 'ivan',      'AD014',  7200,  'PAID'),
 ('10000000-0000-4000-8000-000000000003', 'ivan',      'AD033',  9800,  'CANCELED'),
