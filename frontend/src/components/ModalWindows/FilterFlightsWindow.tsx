@@ -69,11 +69,11 @@ export function FilterFlightsWindow({ filterTable, onFilter, onClose }: FilterFl
 					onSubmit={ submitHandler } 
 					onKeyDown={ keyDownHandler }
 				>
-					<TextHeader text="Поиск полетов"/>
+					<TextHeader text="Фильтры рейсов"/>
 
 					<div className="mb-5">
 						<InputRow
-							label="Номер полета"
+							label="Номер рейса"
 							value={ flightNumber }
 							setValue={ setFlightNumber }
 						/>
@@ -97,7 +97,7 @@ export function FilterFlightsWindow({ filterTable, onFilter, onClose }: FilterFl
 
 					<div className="flex flex-row w-full mb-5 justify-center">
 						<DateTimeSelection 
-							label="Время вылета"
+							label="Вылет с"
 							value={ minDate }
 							setValue={ setMinDate }
 							addClassName="w-full"
@@ -111,7 +111,7 @@ export function FilterFlightsWindow({ filterTable, onFilter, onClose }: FilterFl
 							}}
 						/>
 						<DateTimeSelection 
-							label="Время прилета"
+							label="Вылет до"
 							value={ maxDate }
 							setValue={ setMaxDate }
 							addClassName="w-full ml-5"

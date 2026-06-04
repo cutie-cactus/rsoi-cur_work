@@ -1,4 +1,5 @@
 -- Seed data for flightdb
+-- Рейсы очищаются перед вставкой, чтобы после каждого деплоя демонстрационный набор был одинаковым.
 
 BEGIN;
 
@@ -30,13 +31,27 @@ INSERT INTO public.airport (id, name, city, country) VALUES
 (9,  'Платов',                         'Ростов-на-Дону',   'Россия'),
 (10, 'Храброво',                       'Калининград',      'Россия'),
 (11, 'Минск Национальный',             'Минск',            'Беларусь'),
-(12, 'Анталья',                        'Анталья',          'Турция')
+(12, 'Анталья',                        'Анталья',          'Турция'),
+(13, 'Гейдар Алиев',                   'Баку',             'Азербайджан'),
+(14, 'Звартноц',                       'Ереван',           'Армения')
 ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
     city = EXCLUDED.city,
     country = EXCLUDED.country;
 
+DELETE FROM public.flight;
+ALTER SEQUENCE public.flight_id_seq RESTART WITH 1;
+
 INSERT INTO public.flight (flight_number, price, datetime, from_airport_id, to_airport_id) VALUES
+-- Прошедшие рейсы, чтобы в разделе билетов были видны старые поездки
+('AD001',   3900,  '2026-05-12 08:30:00+03', 1,  2),
+('AD002',   4100,  '2026-05-13 18:10:00+03', 2,  1),
+('AD014',   7200,  '2026-05-18 06:45:00+03', 5,  6),
+('AD025',   8400,  '2026-05-22 12:25:00+03', 6,  5),
+('AD033',   9800,  '2026-05-28 21:35:00+03', 1, 10),
+('AD044',  13400,  '2026-06-01 09:05:00+03', 2, 11),
+('AD055',  21900,  '2026-06-03 04:40:00+03', 1, 12),
+-- Ближайшие и будущие рейсы для покупки
 ('AD101',   4200,  '2026-06-12 09:15:00+03', 1,  2),
 ('AD102',   4300,  '2026-06-12 19:30:00+03', 2,  1),
 ('AD210',   7600,  '2026-06-14 07:45:00+03', 1,  3),
@@ -54,12 +69,9 @@ INSERT INTO public.flight (flight_number, price, datetime, from_airport_id, to_a
 ('AD840',  12500,  '2026-07-12 11:45:00+03', 2, 11),
 ('AD841',  12900,  '2026-07-16 15:35:00+03',11,  2),
 ('AD950',  24600,  '2026-07-20 04:25:00+03', 1, 12),
-('AD951',  25100,  '2026-07-27 22:15:00+03',12,  1)
-ON CONFLICT (flight_number) DO UPDATE SET
-    price = EXCLUDED.price,
-    datetime = EXCLUDED.datetime,
-    from_airport_id = EXCLUDED.from_airport_id,
-    to_airport_id = EXCLUDED.to_airport_id;
+('AD951',  25100,  '2026-07-27 22:15:00+03',12,  1),
+('AD960',  27800,  '2026-08-02 02:55:00+03', 1, 13),
+('AD970',  23100,  '2026-08-09 05:35:00+03', 1, 14);
 
 SELECT setval('public.airport_id_seq', GREATEST((SELECT COALESCE(MAX(id), 1) FROM public.airport), 1), true);
 SELECT setval('public.flight_id_seq', GREATEST((SELECT COALESCE(MAX(id), 1) FROM public.flight), 1), true);

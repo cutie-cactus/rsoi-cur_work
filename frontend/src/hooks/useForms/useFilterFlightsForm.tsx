@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { IFilterFlight } from '../../interfaces/Flight/IFilterFlight';
 
@@ -7,12 +8,21 @@ interface useFilterFlightsFormProps {
 	filterTable: IFilterFlight
 };
 
+function toDayjs(value: IFilterFlight["minDate"]): Dayjs | null {
+	if (!value) return null;
+	if (typeof value === "string") {
+		const parsed = dayjs(value);
+		return parsed.isValid() ? parsed : null;
+	}
+	return value;
+}
+
 export function useFilterFlightsForm({ filterTable }: useFilterFlightsFormProps) {
 	const [flightNumber, setFlightNumber] = useState(filterTable.flightNumber ?? "");
 	const [fromAirport, setFromAirport] = useState(filterTable.fromAirport ?? "");
 	const [toAirport, setToAirport] = useState(filterTable.toAirport ?? "");
-	const [minDate, setMinDate] = useState(filterTable.minDate ?? null);
-	const [maxDate, setMaxDate] = useState(filterTable.maxDate ?? null);
+	const [minDate, setMinDate] = useState<Dayjs | null>(toDayjs(filterTable.minDate));
+	const [maxDate, setMaxDate] = useState<Dayjs | null>(toDayjs(filterTable.maxDate));
 	const [minPrice, setMinPrice] = useState(String(filterTable.minPrice ?? ""));
 	const [maxPrice, setMaxPrice] = useState(String(filterTable.maxPrice ?? ""));
 	const [invalidMinDate, setInvalidMinDate] = useState(false);

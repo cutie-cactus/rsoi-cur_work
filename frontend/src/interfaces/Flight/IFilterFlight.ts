@@ -5,8 +5,8 @@ export interface IFilterFlight {
 	flightNumber?: string
 	fromAirport?: string
 	toAirport?: string
-	minDate?: Dayjs | null
-	maxDate?: Dayjs | null
+	minDate?: Dayjs | string | null
+	maxDate?: Dayjs | string | null
 	minPrice?: number
 	maxPrice?: number
 };

@@ -3,8 +3,8 @@
 @layer components {
 	.navbar-button {
 		@apply mx-4 min-w-max text-white;
-		font-size: 1.62rem;
-		font-weight: 800;
+		font-size: 1.45rem;
+		font-weight: 850;
 		letter-spacing: 0.02em;
 		padding: 0.25rem 0.85rem;
 		border-radius: 999px;
@@ -43,11 +43,11 @@
 
 	.form-optionally-button,
 	.authorize-button {
-		@apply py-2 px-4 mx-2 text-xl rounded-2xl bg-white/10 border;
+		@apply py-2 px-4 mx-1 text-lg rounded-2xl bg-white/10 border;
 		border-color: rgba(255, 255, 255, 0.36);
 		color: #e0f2fe;
 		backdrop-filter: blur(12px);
-		font-weight: 700;
+		font-weight: 750;
 		transition: all 0.18s ease;
 	}
 	.form-optionally-button {
@@ -57,7 +57,8 @@
 		border-color: rgba(37, 99, 235, 0.20);
 	}
 	.authorize-button {
-		@apply w-44;
+		min-width: 8.8rem;
+		white-space: nowrap;
 	}
 	.form-optionally-button:hover,
 	.authorize-button:hover {
@@ -67,7 +68,9 @@
 	}
 
 	.register-button {
-		@apply py-2 px-4 mx-2 w-48 text-xl rounded-2xl;
+		@apply py-2 px-4 mx-1 text-lg rounded-2xl;
+		min-width: 8.9rem;
+		white-space: nowrap;
 	}
 
 	.authorize-form-button {

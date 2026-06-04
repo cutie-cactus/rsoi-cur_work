@@ -10,6 +10,13 @@
 | alina | user123 | USER |
 | demo | demo123 | USER |
 
+## Что изменено в seed
+
+- `flightdb`: таблица `public.flight` очищается перед вставкой. Добавлены прошедшие рейсы за май — начало июня 2026 г. и будущие рейсы для покупки.
+- `ticketdb`: таблица `public.ticket` очищается перед вставкой. Добавлены билеты на прошедшие рейсы, чтобы в разделе «Билеты» отображалась история старых поездок.
+- `bonusdb`: история бонусов пересоздаётся под новые демо-билеты.
+- `statisticsdb`: добавлен расширенный набор логов для диаграмм и списка запросов.
+
 ## Быстрый запуск всех seed-скриптов
 
 Из корня проекта:
@@ -53,8 +60,8 @@ kubectl exec -i "$STATS_POD" -- psql -U postgres -d statisticsdb < database_seed
 
 ```bash
 kubectl exec -it "$AUTH_POD" -- psql -U postgres -d authdb -c 'SELECT login, firstname, lastname, role FROM public."user" ORDER BY login;'
-kubectl exec -it "$FLIGHT_POD" -- psql -U postgres -d flightdb -c 'SELECT flight_number, price, datetime FROM public.flight ORDER BY datetime LIMIT 10;'
-kubectl exec -it "$TICKET_POD" -- psql -U postgres -d ticketdb -c 'SELECT username, flight_number, price, status FROM public.ticket ORDER BY username;'
+kubectl exec -it "$FLIGHT_POD" -- psql -U postgres -d flightdb -c 'SELECT flight_number, price, datetime FROM public.flight ORDER BY datetime LIMIT 12;'
+kubectl exec -it "$TICKET_POD" -- psql -U postgres -d ticketdb -c 'SELECT username, flight_number, price, status FROM public.ticket ORDER BY username, flight_number;'
 kubectl exec -it "$BONUS_POD" -- psql -U postgres -d bonusdb -c 'SELECT username, status, balance FROM public.privilege ORDER BY username;'
 kubectl exec -it "$STATS_POD" -- psql -U postgres -d statisticsdb -c 'SELECT method, status_code, time FROM public.statistics ORDER BY time DESC LIMIT 10;'
 ```

@@ -1,12 +1,14 @@
 import "../Tables.css";
 import { FlightsTitleRow } from "./FlightsTitleRow";
 import { FlightsRow } from "./FlightsRow";
+import { FlightsTableFilter } from "./FlightsTableFilter";
 import { TablePagination } from '../TablePagination';
 import { DataLoadError } from "../../DataLoadError/DataLoadError";
 import { FilterFlightsWindow } from "../../ModalWindows/FilterFlightsWindow";
 import { PurchaseInfoWindow } from "../../ModalWindows/PurchaseInfoWindow";
 import { ITicketResponse } from "../../../interfaces/Ticket/ITicketResponse";
 import { IUser } from '../../../interfaces/User/IUser';
+import { IFilterFlight } from "../../../interfaces/Flight/IFilterFlight";
 import { usePurchaseInfoWindow } from "../../../hooks/useWindows/usePurchaseInfoWindow";
 import { useFlightsTable } from "../../../hooks/useTables/useFlightsTable";
 import { useFilterFlightsWindow } from "../../../hooks/useWindows/useFilterFlightsWindow";
@@ -15,6 +17,18 @@ import { useFilterFlightsWindow } from "../../../hooks/useWindows/useFilterFligh
 interface FlightsTableProps {
 	openMiniDrawer: boolean
 	user: IUser | null
+}
+
+function getFilterSummary(filterTable: IFilterFlight) {
+	const summary: string[] = [];
+	if (filterTable.flightNumber) summary.push(`рейс: ${filterTable.flightNumber}`);
+	if (filterTable.fromAirport) summary.push(`откуда: ${filterTable.fromAirport}`);
+	if (filterTable.toAirport) summary.push(`куда: ${filterTable.toAirport}`);
+	if (filterTable.minPrice) summary.push(`от ${filterTable.minPrice} ₽`);
+	if (filterTable.maxPrice) summary.push(`до ${filterTable.maxPrice} ₽`);
+	if (filterTable.minDate) summary.push(`после выбранной даты`);
+	if (filterTable.maxDate) summary.push(`до выбранной даты`);
+	return summary;
 }
 
 export function FlightsTable({ openMiniDrawer, user }: FlightsTableProps) {
@@ -37,6 +51,7 @@ export function FlightsTable({ openMiniDrawer, user }: FlightsTableProps) {
 
 	const filterFlightsWindow = useFilterFlightsWindow({ handleChangeFilter });
 	const purchaseInfoWindow = usePurchaseInfoWindow();
+	const filterSummary = getFilterSummary(filterTable);
 
 	return (
 		<>
@@ -46,9 +61,22 @@ export function FlightsTable({ openMiniDrawer, user }: FlightsTableProps) {
 						<div>
 							<div className="section-eyebrow">flight marketplace</div>
 							<div className="section-title">Подбор авиамаршрута</div>
-							<div className="section-subtitle">Сортируйте рейсы, фильтруйте направления и оформляйте покупку в одном окне.</div>
+							<div className="section-subtitle">Откройте фильтры, выберите направление, дату или диапазон стоимости и оформите покупку.</div>
 						</div>
-						<div className="dashboard-badge">Gateway online</div>
+						<div className="dashboard-actions">
+							{ filterSummary.length > 0 &&
+								<div className="filter-summary">
+									<span>Активно:</span>
+									<span>{ filterSummary.slice(0, 2).join(', ') }{ filterSummary.length > 2 ? '…' : '' }</span>
+								</div>
+							}
+							<FlightsTableFilter
+								filterTable={ filterTable }
+								handleOpenWindow={ filterFlightsWindow.handleOpenWindow }
+								text="Выбрать фильтры"
+							/>
+							<div className="dashboard-badge">Gateway online</div>
+						</div>
 					</div>
 					<FlightsTitleRow 
 						sortTable={ sortTable }

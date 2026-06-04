@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import qs from 'qs';
+import dayjs from 'dayjs';
 
 import GatewayRequests from '../../requests/GatewayRequests';
 import AuthService from '../../services/AuthService';
@@ -11,6 +12,16 @@ import { IFilterFlight } from '../../interfaces/Flight/IFilterFlight';
 import { IPrivilege } from '../../interfaces/Bonus/IPrivilege';
 
 
+function getStringParam(value: unknown): string | undefined {
+	return typeof value === "string" && value.length > 0 ? value : undefined;
+}
+
+function getNumberParam(value: unknown): number | undefined {
+	if (typeof value !== "string" || value.length === 0) return undefined;
+	const parsed = Number(value);
+	return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+}
+
 export function useFlightsTable() {
 	let filterTableInitValue: IFilterFlight;
 	let sortTableInitValue: SortFlights;
@@ -20,9 +31,17 @@ export function useFlightsTable() {
 	if (window.location.search) {
 		const params = qs.parse(window.location.search.substring(1));
 
-		filterTableInitValue = { ...params };
-		pageInitValue = Number(params.page);
-		rowsPerPageInitValue = Number(params.rowsPerPage);
+		filterTableInitValue = {
+			flightNumber: getStringParam(params.flightNumber),
+			fromAirport: getStringParam(params.fromAirport),
+			toAirport: getStringParam(params.toAirport),
+			minDate: getStringParam(params.minDate) ? dayjs(getStringParam(params.minDate)) : null,
+			maxDate: getStringParam(params.maxDate) ? dayjs(getStringParam(params.maxDate)) : null,
+			minPrice: getNumberParam(params.minPrice),
+			maxPrice: getNumberParam(params.maxPrice),
+		};
+		pageInitValue = Number(params.page) || 0;
+		rowsPerPageInitValue = Number(params.rowsPerPage) || 20;
 		sortTableInitValue = (Object.values(SortFlights)).find(obj => obj === params.sortTable) ?? SortFlights.IdAsc;
 	} else {
 		filterTableInitValue = {};
@@ -104,14 +123,14 @@ export function useFlightsTable() {
 			flightNumber: filterTable.flightNumber,
 			fromAirport: filterTable.fromAirport,
 			toAirport: filterTable.toAirport,
-			minDate: filterTable.minDate,
-			maxDate: filterTable.maxDate,
+			minDate: filterTable.minDate && typeof filterTable.minDate !== "string" ? filterTable.minDate.format("YYYY-MM-DDTHH:mm:ss") : filterTable.minDate,
+			maxDate: filterTable.maxDate && typeof filterTable.maxDate !== "string" ? filterTable.maxDate.format("YYYY-MM-DDTHH:mm:ss") : filterTable.maxDate,
 			minPrice: filterTable.minPrice,
 			maxPrice: filterTable.maxPrice,
 			page,
 			rowsPerPage,
 			sortTable,
-		});
+		}, { skipNulls: true });
 		navigate(`?${queryString}`);
 
 		fetchFlights();

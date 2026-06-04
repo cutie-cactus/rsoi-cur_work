@@ -6,16 +6,11 @@
 		top: 94px;
 		bottom: 26px;
 		right: 26px;
-		transition-property: left;
-		transition-duration: 0.22s;
-		transition-timing-function: ease;
+		left: 26px;
+		transition: all 0.22s ease;
 	}
-	.short-page-container {
-		@apply page-container;
-		left: 286px;
-	}
+	.short-page-container,
 	.long-page-container {
 		@apply page-container;
-		left: 90px;
 	}
 }

@@ -1,7 +1,6 @@
 import "../Tables.css";
 import { FlightsTableColumn } from "./FlightsTableColumn";
 import { SortFlights } from "../../../enums/SortFlights";
-import { FlightsTableFilter } from "./FlightsTableFilter";
 import { IFilterFlight } from "../../../interfaces/Flight/IFilterFlight";
 
 
@@ -56,12 +55,7 @@ export function FlightsTitleRow(props: FlightsTitleRowProps) {
 				addClassName="basis-1/6"
 			/>
 
-			<div className="actions">
-				<FlightsTableFilter
-					filterTable={ props.filterTable }
-					handleOpenWindow={ props.handleOpenFilterWindow }
-				/>
-			</div>
+			<div className="actions" />
 		</div>
 	)
 }

@@ -25,6 +25,15 @@ interface MethodCounter {
 	PATCH: number
 }
 
+export interface EndpointCounter {
+  url: string
+  count: number
+}
+
+function statusCodeAsNumber(value: number | string): number {
+  return typeof value === "number" ? value : Number(value);
+}
+
 function countStatusCode(items: IStatistics[]): StatusCodeCounter {
   const counter: StatusCodeCounter = {
     x200: 0,
@@ -34,13 +43,14 @@ function countStatusCode(items: IStatistics[]): StatusCodeCounter {
   }
 
   for (const item of items) {
-    if (item.status_code >= 200 && item.status_code < 300) {
+    const code = statusCodeAsNumber(item.status_code);
+    if (code >= 200 && code < 300) {
       counter.x200 += 1;
-    } else if (item.status_code >= 300 && item.status_code < 400) {
+    } else if (code >= 300 && code < 400) {
       counter.x300 += 1;
-    } else if (item.status_code >= 400 && item.status_code < 500) {
+    } else if (code >= 400 && code < 500) {
       counter.x400 += 1;
-    } else if (item.status_code >= 500 && item.status_code < 600) {
+    } else if (code >= 500 && code < 600) {
       counter.x500 += 1;
     }
   }
@@ -62,28 +72,27 @@ function countMethod(items: IStatistics[]): MethodCounter {
   }
 
   for (const item of items) {
-    if (item.method === "GET") {
-      counter.GET += 1;
-    } else if (item.method === "HEAD") {
-      counter.HEAD += 1;
-    } else if (item.method === "POST") {
-      counter.POST += 1;
-    } else if (item.method === "PUT") {
-      counter.PUT += 1;
-    } else if (item.method === "DELETE") {
-      counter.DELETE += 1;
-    } else if (item.method === "CONNECT") {
-      counter.CONNECT += 1;
-    } else if (item.method === "OPTIONS") {
-      counter.OPTIONS += 1;
-    } else if (item.method === "TRACE") {
-      counter.TRACE += 1;
-    } else if (item.method === "PATCH") {
-      counter.PATCH += 1;
+    const method = item.method as keyof MethodCounter;
+    if (method in counter) {
+      counter[method] += 1;
     }
   }
 
   return counter;
+}
+
+function countEndpoints(items: IStatistics[]): EndpointCounter[] {
+  const counter = new Map<string, number>();
+
+  for (const item of items) {
+    const normalizedUrl = item.url.replace(/^https?:\/\/[^/]+/i, "");
+    counter.set(normalizedUrl, (counter.get(normalizedUrl) ?? 0) + 1);
+  }
+
+  return Array.from(counter.entries())
+    .map(([url, count]) => ({ url, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
 }
 
 export function useStatisticsTable() {
@@ -92,8 +101,8 @@ export function useStatisticsTable() {
 
 	if (window.location.search) {
 		const params = qs.parse(window.location.search.substring(1));
-		pageInitValue = Number(params.page);
-		rowsPerPageInitValue = Number(params.rowsPerPage);
+		pageInitValue = Number(params.page) || 0;
+		rowsPerPageInitValue = Number(params.rowsPerPage) || 20;
 	} else {
 		pageInitValue = 0;
 		rowsPerPageInitValue = 20;
@@ -102,6 +111,7 @@ export function useStatisticsTable() {
 	const [statistics, setStatistics] = useState<IStatistics[]>([]);
 	const [statusCodeChart, setStatusCodeChart] = useState<StatusCodeCounter>();
 	const [methodChart, setMethodChart] = useState<MethodCounter>();
+	const [endpointChart, setEndpointChart] = useState<EndpointCounter[]>([]);
 	const [amountStatistics, setAmountStatistics] = useState(0);
 	const [page, setPage] = useState(pageInitValue);
 	const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageInitValue);
@@ -133,12 +143,14 @@ export function useStatisticsTable() {
 			setStatistics(response.data.items);
 			setStatusCodeChart(countStatusCode(response.data.items));
 			setMethodChart(countMethod(response.data.items));
+			setEndpointChart(countEndpoints(response.data.items));
 			setAmountStatistics(response.data.totalElements);
 		} else {
 			setError(true);
 			setStatistics([]);
 			setStatusCodeChart(undefined);
 			setMethodChart(undefined);
+			setEndpointChart([]);
 			setAmountStatistics(0);
 		}
 	};
@@ -157,6 +169,7 @@ export function useStatisticsTable() {
 		statistics,
 		statusCodeChart,
 		methodChart,
+		endpointChart,
 		amountStatistics,
 		page, 
 		rowsPerPage,

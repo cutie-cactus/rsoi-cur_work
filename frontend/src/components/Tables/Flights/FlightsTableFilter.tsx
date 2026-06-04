@@ -1,26 +1,26 @@
 import "../Tables.css";
+import TuneIcon from '@mui/icons-material/Tune';
 import { IFilterFlight } from "../../../interfaces/Flight/IFilterFlight";
-import { FilterIcon } from "../../Icons/FilterIcon";
 import { useFilterFlightsIcon } from "../../../hooks/useIcons/useFilterFlightsIcon";
 
 
 interface FlightsTableFilterProps {
 	filterTable: IFilterFlight
 	handleOpenWindow: () => void
+	text?: string
 }
 
-export function FlightsTableFilter({ filterTable, handleOpenWindow }: FlightsTableFilterProps) {
-	const { 
-		active,
-	} = useFilterFlightsIcon({ filterTable });
+export function FlightsTableFilter({ filterTable, handleOpenWindow, text = "Фильтры" }: FlightsTableFilterProps) {
+	const { active } = useFilterFlightsIcon({ filterTable });
 
 	return (
-		<FilterIcon
-			color="white"
-			selected={ active }
+		<button
+			type="button"
+			className={`flight-filter-button ${active ? "flight-filter-button-active" : ""}`}
 			onClick={ handleOpenWindow }
-			addClassName="py-2 px-2 hover:bg-white/10"
-			addContainerClassName="basis-1/2"
-		/>
+		>
+			<TuneIcon fontSize="small" />
+			<span>{ active ? "Фильтры включены" : text }</span>
+		</button>
 	)
 }
