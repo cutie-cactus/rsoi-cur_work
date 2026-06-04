@@ -19,13 +19,13 @@ export function BalanceHistory({ history, selectDate, selectTime }: BalanceHisto
 
 	return (
 		<>
-			<div className="profile-balance-history-list">
+			<div className="detailed-info-body">
 				{ history.map((balanceHistory, index) => 
 						<div 
-							className="profile-balance-history-item"
+							className="my-2"
 							key={ `${balanceHistory.ticketUid}-${balanceHistory.operationType}-${index}` }
 						>
-							<div className="profile-balance-history-row">
+							<div className="flex flex-row mt-2">
 								<div 
 									className="balance-history-info"
 									onDoubleClick={ async () => { 
