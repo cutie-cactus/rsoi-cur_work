@@ -417,3 +417,36 @@
 		}
 	}
 }
+
+
+/* Scroll fix: keep the whole profile cabinet inside the visible page area.
+   The previous overlap fix made the profile wrapper auto-height; inside the
+   absolute page container that disabled scrolling. Now the wrapper has a fixed
+   viewport-bound height and scrolls internally, while all profile sections keep
+   their natural order: profile data + purchases first, bonus operations below. */
+@layer components {
+	.detailed-info-container.profile-container {
+		height: 100%;
+		max-height: 100%;
+		min-height: 0;
+		overflow-y: auto;
+		overflow-x: hidden;
+		box-sizing: border-box;
+		padding-bottom: 2rem;
+	}
+
+	.profile-container > * {
+		flex-shrink: 0;
+	}
+
+	.profile-dashboard-grid {
+		height: auto;
+		min-height: auto;
+		overflow: visible;
+	}
+
+	.profile-history-panel {
+		margin-top: 1rem;
+		margin-bottom: 1.5rem;
+	}
+}
