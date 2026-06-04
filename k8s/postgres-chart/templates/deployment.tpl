@@ -16,7 +16,6 @@ spec:
       app: {{.service.name}}
   template:
     metadata:
-      name: {{.service.name}}
       labels:
         app: {{.service.name}}
         app.kubernetes.io/name: {{.service.name}}
@@ -28,14 +27,14 @@ spec:
       containers:
         - name: {{.service.name}}
           image: library/postgres:{{ .ctx.Values.version }}-alpine
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: POSTGRES_USER
-              value: {{ .ctx.Values.default_database.user }}
+              value: {{ .ctx.Values.defaultdb.user }}
             - name: POSTGRES_PASSWORD
-              value: {{ .ctx.Values.default_database.password }}
+              value: {{ .ctx.Values.defaultdb.password }}
             - name: POSTGRES_DB
-              value: {{ .service.db_name | default .service.name }}
+              value: {{ .service.name }}
           resources:
             requests:
               memory: "{{ .ctx.Values.resources.requests.memory }}"
@@ -57,4 +56,4 @@ spec:
         - name: postgres-config-map
           configMap:
             name: {{ .ctx.Release.Name }}-configmap-{{ .service.name }}
-{{- end}}
+{{- end }}

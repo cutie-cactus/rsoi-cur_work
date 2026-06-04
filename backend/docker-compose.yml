@@ -7,10 +7,10 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=bonus_db
+      - POSTGRESDB=bonusdb
     volumes:
       - pg_data_bonus:/var/lib/postgresql/data
-      - ./bonus_service/sql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - ./bonus_service/sql/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
     networks:
       - default
     healthcheck:
@@ -25,10 +25,10 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=flight_db
+      - POSTGRESDB=flightdb
     volumes:
       - pg_data_flight:/var/lib/postgresql/data
-      - ./flight_service/sql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - ./flight_service/sql/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
     networks:
       - default
     healthcheck:
@@ -43,10 +43,10 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=ticket_db
+      - POSTGRESDB=ticketdb
     volumes:
       - pg_data_ticket:/var/lib/postgresql/data
-      - ./ticket_service/sql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - ./ticket_service/sql/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
     networks:
       - default
     healthcheck:
@@ -61,10 +61,10 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=auth_db
+      - POSTGRESDB=authdb
     volumes:
       - pg_data_auth:/var/lib/postgresql/data
-      - ./auth_service/sql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - ./auth_service/sql/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
     networks:
       - default
     healthcheck:
@@ -79,7 +79,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=statistics_db
+      - POSTGRESDB=statisticsdb
     volumes:
       - pg_data_statistics:/var/lib/postgresql/data
     networks:
@@ -158,7 +158,7 @@ services:
       - default
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:7.3.2
     container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -197,7 +197,7 @@ services:
       context: "."
       dockerfile: ./docker/statistics.Dockerfile
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka-broker:29092
     ports:
       - "8090:8090"
     networks:
@@ -215,7 +215,7 @@ services:
       context: "."
       dockerfile: ./docker/consumer.Dockerfile
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - KAFKA_BOOTSTRAP_SERVERS=kafka-broker:29092
       - KAFKA_GROUP_ID=my-group
     networks:
       - default

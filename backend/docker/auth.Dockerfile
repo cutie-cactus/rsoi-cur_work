@@ -6,7 +6,7 @@ COPY ./auth_service /auth
 COPY ../config.yaml /auth
 COPY ../requirements.txt /auth
 
-RUN pip3.10 install --timeout=40 --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pypi.python.org -r requirements.txt
+RUN pip3.10 install -r requirements.txt
 
 EXPOSE 8888
 

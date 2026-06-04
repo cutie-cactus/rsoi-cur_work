@@ -23,7 +23,7 @@ spec:
       containers:
         - name: {{ .ctx.Release.Name }}-{{.service.name}}
           image: {{.service.container}}
-          imagePullPolicy: {{ .service.imagePullPolicy | default "IfNotPresent" }}
+          imagePullPolicy: {{ .service.imagePullPolicy | default "Always" }}
 
           {{- if and (hasKey .service "port") (gt (int .service.port) 0) }}
           ports:
@@ -35,6 +35,12 @@ spec:
           {{- end }}
 
           env:
+            {{- if eq .service.name "kafka-broker" }}
+            - name: "POD_IP"
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            {{- end }}
             {{- range $k, $v := .service.env}}
             - name: {{$k | quote}}
               value: {{$v | quote}}
