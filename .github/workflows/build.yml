@@ -60,11 +60,17 @@ jobs:
          docker push cr.yandex/${{ env.REGISTRY_ID }}/consumer-service:latest
 
      # 4. Сборка и публикация frontend-образа
+     # Важно: кроме latest публикуем тег с SHA коммита.
+     # Так Kubernetes точно увидит новый образ клиента, а не продолжит использовать старый latest.
      - name: Build and push frontend image
        run: |
          cd frontend
-         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/dips-client:latest .
+         docker build --no-cache \
+           -t cr.yandex/${{ env.REGISTRY_ID }}/dips-client:latest \
+           -t cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA} \
+           .
          docker push cr.yandex/${{ env.REGISTRY_ID }}/dips-client:latest
+         docker push cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA}
 
      # 5. Получение kubeconfig для кластера
      - name: Get k8s credentials
@@ -120,11 +126,13 @@ jobs:
          echo "Release lock cleared."
        shell: bash
 
-     # 9. Деплой приложения с переопределением образов
+     # 9. Деплой приложения с переопределением образа frontend
+     # Без этого chart может брать старый образ из values.yaml или не менять pod, если тег latest не изменился в spec.
      - name: Deploy application services
        run: |
          helm upgrade --install my-app ./k8s/app-chart \
            -f ./k8s/app-chart/values.yaml \
+           --set services.dips-client.container=cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA} \
            --wait --timeout 15m
 
      # 10. Применяем Ingress правила
