@@ -97,14 +97,14 @@ export function MiniDrawer(props: MiniDrawerProps) {
 				<List>
 					<DrawerListItem
 						openDrawer={ props.open }
-						text="Список полетов"
+						text="Маршруты"
 						link="/"
 						icon={ <FlightIcon /> }
 					/>
 					{ props.user &&
 						<DrawerListItem
 							openDrawer={ props.open }
-							text="Билеты"
+							text="Мои перелёты"
 							link="/tickets"
 							icon={ <AirplaneTicketIcon /> }
 						/>
@@ -112,7 +112,7 @@ export function MiniDrawer(props: MiniDrawerProps) {
 					{ props.user &&
 						<DrawerListItem
 							openDrawer={ props.open }
-							text="Аккаунт"
+							text="Профиль"
 							link="/account"
 							icon={ <AccountBoxIcon /> }
 						/>
@@ -120,7 +120,7 @@ export function MiniDrawer(props: MiniDrawerProps) {
 					{ props.user && props.user.role === "ADMIN" &&
 						<DrawerListItem
 							openDrawer={ props.open }
-							text="Статистика"
+							text="Аналитика"
 							link="/statistics"
 							icon={ <BarChartIcon /> }
 						/>

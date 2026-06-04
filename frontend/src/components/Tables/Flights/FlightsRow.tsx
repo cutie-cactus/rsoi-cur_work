@@ -26,11 +26,11 @@ export function FlightsRow(props: FlightsRowProps) {
 				className={ `row ${ props.addClassName }` }
 				onDoubleClick={ props.user ? buyTicketWindow.handleOpenWindow : undefined }
 			>
-				<div className="row-item basis-1/6">{ props.flight.flightNumber }</div>
+				<div className="row-item basis-1/6">{ `№ ${props.flight.flightNumber}` }</div>
 				<div className="row-item basis-1/4">{ props.flight.fromAirport }</div>
 				<div className="row-item basis-1/4">{ props.flight.toAirport }</div>
 				<div className="row-item basis-1/5">{ props.flight.date }</div>
-				<div className="row-item basis-1/6">{ props.flight.price }</div>
+				<div className="row-item basis-1/6">{ `${props.flight.price} ₽` }</div>
 				
 				<div className="actions">
 					{ props.user && 

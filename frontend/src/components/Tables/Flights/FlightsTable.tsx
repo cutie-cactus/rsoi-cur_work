@@ -41,7 +41,15 @@ export function FlightsTable({ openMiniDrawer, user }: FlightsTableProps) {
 	return (
 		<>
 			<div className={`${openMiniDrawer ? "short-table-container" : "long-table-container"}`}>
-				<div className="table">
+				<div className="table flight-table">
+					<div className="flight-dashboard-header">
+						<div>
+							<div className="section-eyebrow">flight marketplace</div>
+							<div className="section-title">Подбор авиамаршрута</div>
+							<div className="section-subtitle">Сортируйте рейсы, фильтруйте направления и оформляйте покупку в одном окне.</div>
+						</div>
+						<div className="dashboard-badge">Gateway online</div>
+					</div>
 					<FlightsTitleRow 
 						sortTable={ sortTable }
 						filterTable={ filterTable }

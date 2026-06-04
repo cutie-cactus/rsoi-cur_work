@@ -3,16 +3,131 @@
 @tailwind utilities;
 
 @layer components {
+	:root {
+		--ad-bg-start: #eef4ff;
+		--ad-bg-middle: #f8fbff;
+		--ad-bg-end: #eaf7f1;
+		--ad-ink: #1f2937;
+		--ad-muted: #64748b;
+		--ad-blue: #2f6fed;
+		--ad-blue-dark: #163c8f;
+		--ad-green: #0ea5a3;
+		--ad-panel: rgba(255, 255, 255, 0.86);
+		--ad-border: rgba(47, 111, 237, 0.14);
+		--ad-shadow: 0 24px 70px rgba(30, 58, 138, 0.16);
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
 	body {
-		@apply bg-gray-200;
 		width: 100%;
 		height: 100%;
 		position: absolute;
+		margin: 0;
+		background:
+			radial-gradient(circle at 10% 8%, rgba(47, 111, 237, 0.20), transparent 30%),
+			radial-gradient(circle at 85% 18%, rgba(14, 165, 163, 0.17), transparent 28%),
+			linear-gradient(135deg, var(--ad-bg-start), var(--ad-bg-middle) 48%, var(--ad-bg-end));
+		background-attachment: fixed;
 		background-size: cover;
+		font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		color: var(--ad-ink);
+	}
+
+	body::before {
+		content: "";
+		position: fixed;
+		inset: 0;
+		pointer-events: none;
+		background-image:
+			linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+		background-size: 34px 34px;
+		mask-image: linear-gradient(to bottom, black, transparent 82%);
 	}
 
 	:active, :hover, :focus {
 		outline: 0;
 		outline-offset: 0;
+	}
+
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.MuiAppBar-root {
+		background: rgba(15, 23, 42, 0.92) !important;
+		backdrop-filter: blur(18px);
+		box-shadow: 0 18px 50px rgba(15, 23, 42, 0.18) !important;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+	}
+
+	.MuiToolbar-root {
+		min-height: 72px !important;
+	}
+
+	.MuiDrawer-paper {
+		background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.96)) !important;
+		color: #e2e8f0 !important;
+		border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+		box-shadow: 18px 0 55px rgba(15, 23, 42, 0.14);
+	}
+
+	.MuiDrawer-paper .MuiDivider-root {
+		border-color: rgba(255, 255, 255, 0.09) !important;
+	}
+
+	.MuiDrawer-paper .MuiListItemButton-root {
+		margin: 6px 10px;
+		border-radius: 18px;
+		transition: all 0.18s ease;
+	}
+
+	.MuiDrawer-paper .MuiListItemButton-root:hover {
+		background: rgba(255, 255, 255, 0.10) !important;
+		transform: translateX(3px);
+	}
+
+	.MuiDrawer-paper .MuiListItemIcon-root,
+	.MuiDrawer-paper .MuiSvgIcon-root {
+		color: #93c5fd !important;
+	}
+
+	.MuiDrawer-paper p {
+		color: #dbeafe !important;
+		font-weight: 650;
+		letter-spacing: 0.01em;
+	}
+
+	.MuiTextField-root .MuiOutlinedInput-root {
+		border-radius: 18px !important;
+		background: rgba(255, 255, 255, 0.88);
+	}
+
+	.MuiTextField-root .MuiOutlinedInput-notchedOutline {
+		border-color: rgba(47, 111, 237, 0.18) !important;
+	}
+
+	.MuiTextField-root .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline,
+	.MuiTextField-root .Mui-focused .MuiOutlinedInput-notchedOutline {
+		border-color: rgba(47, 111, 237, 0.58) !important;
+	}
+
+	.MuiTextField-root .MuiInputLabel-root {
+		color: #64748b !important;
+		font-weight: 600;
+	}
+
+	.MuiAlert-root {
+		border-radius: 18px !important;
+		box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.55);
+	}
+
+	.MuiTablePagination-root {
+		width: 100%;
 	}
 }

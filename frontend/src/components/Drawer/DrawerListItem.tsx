@@ -40,7 +40,7 @@ export function DrawerListItem(props: DrawerListItemProps) {
 
 					<ListItemText 
 						primary={
-							<p className='text-xl text-gray-600'>
+							<p className='text-lg'>
 								{ props.text }
 							</p>
 						}

@@ -2,12 +2,26 @@
 
 @layer components {
 	.backdrop {
-		@apply fixed w-screen h-screen bg-black/50 top-0 bottom-0 left-0 right-0;
+		@apply fixed w-screen h-screen bg-slate-950/60 top-0 bottom-0 left-0 right-0;
 		z-index: 10000;
+		backdrop-filter: blur(8px);
 	}
 	.window {
-		@apply fixed flex flex-col bg-white left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 px-8 py-5 rounded-xl shadow-white shadow-sm min-w-min min-h-max;
+		@apply fixed flex flex-col left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 px-8 py-6 rounded-3xl min-w-min min-h-max;
 		z-index: 10000;
+		background: rgba(255, 255, 255, 0.94);
+		border: 1px solid rgba(255, 255, 255, 0.65);
+		box-shadow: 0 30px 90px rgba(15, 23, 42, 0.32);
+		overflow: hidden;
+	}
+	.window::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		height: 7px;
+		background: linear-gradient(90deg, #2563eb, #06b6d4, #14b8a6);
 	}
 	.window-body {
 		display: grid;
@@ -47,5 +61,16 @@
 	.authorization-window {
 		@apply window;
 		width: 38rem;
+	}
+	.authorization-window::after {
+		content: "AeroDesk";
+		position: absolute;
+		right: 1.4rem;
+		top: 0.9rem;
+		font-weight: 900;
+		font-size: 0.82rem;
+		letter-spacing: 0.16em;
+		color: #2563eb;
+		text-transform: uppercase;
 	}
 }

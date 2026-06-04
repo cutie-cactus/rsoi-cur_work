@@ -43,7 +43,7 @@ export function DrawerDropdownList(props: DrawerDropdownListProps) {
 
 					<ListItemText 
 						primary={
-							<p className='text-xl text-gray-600'>
+							<p className='text-lg'>
 								{ props.text }
 							</p>
 						}

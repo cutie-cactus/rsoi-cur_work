@@ -6,36 +6,49 @@
 	}
 	.icon {
 		@apply flex items-center rounded-full m-auto;
+		transition: all 0.18s ease;
 	}
 
 	.confirm-icon {
-		@apply icon border; 
-		border-color: #197aca;
-		background-color: #197aca;
+		@apply icon border;
+		border-color: #2563eb;
+		background: linear-gradient(135deg, #2563eb, #06b6d4);
 	}
 	.confirm-icon:hover {
-		@apply border-white; 
-		background-color: #156fb9;
+		@apply border-white;
+		transform: translateY(-1px);
+		filter: saturate(1.08);
 	}
 	.reject-icon {
-		@apply icon border hover:border-2; 
-		border-color: #197aca;
+		@apply icon border;
+		border-color: rgba(37, 99, 235, 0.35);
+		background: rgba(255, 255, 255, 0.78);
 	}
-	.change-icon {
-		@apply icon hover:bg-gray-600/10;
+	.reject-icon:hover {
+		border-color: #2563eb;
+		transform: translateY(-1px);
 	}
+	.change-icon,
 	.pay-icon {
-		@apply icon hover:bg-gray-600/10;
+		@apply icon;
+	}
+	.change-icon:hover,
+	.pay-icon:hover {
+		background: rgba(37, 99, 235, 0.10);
+		transform: translateY(-1px);
 	}
 	.add-icon {
 		@apply icon;
-		background-color: #197aca;
+		background: linear-gradient(135deg, #2563eb, #06b6d4);
 	}
 	.add-icon:hover {
-		@apply shadow-md shadow-gray-300; 
-		background-color: #156fb9;
+		@apply shadow-md shadow-gray-300;
+		transform: translateY(-1px);
 	}
 	.arrow-icon {
-		@apply icon hover:bg-white/10;
+		@apply icon;
+	}
+	.arrow-icon:hover {
+		background: rgba(37, 99, 235, 0.12);
 	}
 }

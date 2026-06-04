@@ -16,7 +16,7 @@ export function FlightsTitleRow(props: FlightsTitleRowProps) {
 	return (
 		<div className="title-row">
 			<FlightsTableColumn 
-				nameColumn='Номер' 
+				nameColumn='Рейс' 
 				sortAsc={ SortFlights.FlightNumberAsc } 
 				sortDesc={ SortFlights.FlightNumberDesc }
 				sortTable={ props.sortTable }
@@ -24,7 +24,7 @@ export function FlightsTitleRow(props: FlightsTitleRowProps) {
 				addClassName="basis-1/6"
 			/>
 			<FlightsTableColumn 
-				nameColumn='Отправление' 
+				nameColumn='Откуда' 
 				sortAsc={ SortFlights.FromAirportmAsc } 
 				sortDesc={ SortFlights.FromAirportDesc }
 				sortTable={ props.sortTable }
@@ -32,7 +32,7 @@ export function FlightsTitleRow(props: FlightsTitleRowProps) {
 				addClassName="basis-1/4"
 			/>
 			<FlightsTableColumn 
-				nameColumn='Прибытие' 
+				nameColumn='Куда' 
 				sortAsc={ SortFlights.ToAirportmAsc } 
 				sortDesc={ SortFlights.ToAirportDesc }
 				sortTable={ props.sortTable }
@@ -40,7 +40,7 @@ export function FlightsTitleRow(props: FlightsTitleRowProps) {
 				addClassName="basis-1/4"
 			/>
 			<FlightsTableColumn 
-				nameColumn='Время' 
+				nameColumn='Вылет' 
 				sortAsc={ SortFlights.DateAsc } 
 				sortDesc={ SortFlights.DateDesc }
 				sortTable={ props.sortTable }
@@ -48,7 +48,7 @@ export function FlightsTitleRow(props: FlightsTitleRowProps) {
 				addClassName="basis-1/5"
 			/>
 			<FlightsTableColumn 
-				nameColumn='Цена' 
+				nameColumn='Тариф' 
 				sortAsc={ SortFlights.PriceAsc } 
 				sortDesc={ SortFlights.PriceDesc }
 				sortTable={ props.sortTable }

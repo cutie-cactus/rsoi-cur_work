@@ -29,7 +29,7 @@ export function Account({ user }: AccountProps) {
 						{ privilegeInfo &&
 							<div className="detailed-info-container">
 								<TextHeader
-									text="Информация о пользователе и история покупок билетов"
+									text="Профиль пассажира и бонусные операции"
 								/>
 
 								<UserInfo

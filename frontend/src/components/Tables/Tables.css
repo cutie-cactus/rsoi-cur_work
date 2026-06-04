@@ -2,69 +2,169 @@
 
 @layer components {
 	.table-container {
-		@apply absolute m-5;
-		top: 65px;
-		bottom: 0px;
-		right: 0px;
+		@apply absolute;
+		top: 94px;
+		bottom: 26px;
+		right: 26px;
 		transition-property: left;
-		transition-duration: 0.2s;
+		transition-duration: 0.22s;
+		transition-timing-function: ease;
 	}
 	.short-table-container {
 		@apply table-container;
-		left: 260px;
+		left: 286px;
 	}
 	.long-table-container {
 		@apply table-container;
-		left: 65px;
+		left: 90px;
 	}
 	.table {
-		@apply container mx-auto min-w-max block rounded-xl;
+		@apply container mx-auto min-w-max block rounded-3xl;
 		height: 100%;
-		width: 90%;
+		width: 92%;
 		position: relative;
-		box-shadow: 0 0 40px #b5b8bc;
+		background: var(--ad-panel);
+		backdrop-filter: blur(20px);
+		border: 1px solid var(--ad-border);
+		box-shadow: var(--ad-shadow);
+		overflow: hidden;
+	}
+
+	.flight-dashboard-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.5rem;
+		padding: 1.45rem 1.7rem 1.05rem;
+		background:
+			radial-gradient(circle at 9% 30%, rgba(6, 182, 212, 0.20), transparent 28%),
+			linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(239, 246, 255, 0.92));
+		border-bottom: 1px solid rgba(47, 111, 237, 0.10);
+	}
+	.section-eyebrow {
+		font-size: 0.85rem;
+		font-weight: 800;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: #2563eb;
+	}
+	.section-title {
+		font-size: 2rem;
+		font-weight: 850;
+		line-height: 1.1;
+		color: #0f172a;
+		margin-top: 0.15rem;
+	}
+	.section-subtitle {
+		font-size: 1rem;
+		color: #64748b;
+		margin-top: 0.35rem;
+	}
+	.dashboard-badge {
+		min-width: max-content;
+		padding: 0.8rem 1rem;
+		border-radius: 999px;
+		background: rgba(15, 23, 42, 0.90);
+		color: #e0f2fe;
+		font-weight: 800;
+		box-shadow: 0 16px 35px rgba(15, 23, 42, 0.18);
+	}
+	.dashboard-badge::before {
+		content: "●";
+		color: #22c55e;
+		margin-right: 0.5rem;
 	}
 
 	.title-row {
-		@apply container py-1 flex mx-auto min-w-full text-white border-b border-gray-400 rounded-b-none rounded-xl;
+		@apply container flex mx-auto min-w-full;
 		min-width: 60rem;
-		background-color: #197aca;
+		padding: 0.82rem 1rem;
+		background: rgba(248, 250, 252, 0.88);
+		color: #334155;
+		border-bottom: 1px solid rgba(148, 163, 184, 0.18);
 	}
 	.title-row-without-buttons {
-		@apply title-row pt-2 pb-2.5;
+		@apply title-row;
 	}
 	.title-row-item {
-		@apply flex flex-row items-center pl-5 text-xl font-bold;
+		@apply flex flex-row items-center pl-5 text-lg font-bold;
+		color: #334155;
 	}
 
 	.rows-container {
 		@apply absolute w-full;
-		top: 3rem;
-		bottom: 3.4rem;
+		top: 3.75rem;
+		bottom: 4.3rem;
 		overflow-x: auto;
+		padding: 0.6rem 0.85rem 0.2rem;
+	}
+	.flight-table .rows-container {
+		top: 10.35rem;
 	}
 	.rows {
 		@apply block w-full;
 		overflow-y: scroll;
-  	scroll-behavior: smooth;
+		scroll-behavior: smooth;
 		max-height: 100%;
+		padding-right: 0.25rem;
 	}
 	.row {
-		@apply container py-1 flex mx-auto min-w-full text-gray-600 border-b border-gray-400;
+		@apply container flex mx-auto min-w-full;
 		min-width: 60rem;
+		margin-bottom: 0.72rem;
+		padding: 0.65rem 0.15rem;
+		border: 1px solid rgba(148, 163, 184, 0.18);
+		border-radius: 22px;
+		background: rgba(255, 255, 255, 0.90) !important;
+		color: #334155;
+		box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+		transition: all 0.18s ease;
 	}
 	.row:hover {
-		background-color: #cbd9e6;
+		background: #ffffff !important;
+		border-color: rgba(37, 99, 235, 0.26);
+		box-shadow: 0 18px 42px rgba(37, 99, 235, 0.12);
+		transform: translateY(-2px);
 	}
 	.row-item {
-		@apply flex flex-row items-center py-1 pl-5 text-xl;
+		@apply flex flex-row items-center py-1 pl-5 text-lg;
+		font-weight: 600;
+	}
+	.row-item:first-child {
+		font-weight: 850;
+		color: #1d4ed8;
 	}
 
 	.actions {
 		@apply flex flex-row justify-end basis-12 mr-3;
 	}
 	.pagination {
-		@apply absolute flex w-full bg-gray-200 rounded-t-none rounded-xl;
+		@apply absolute flex w-full;
 		bottom: 0px;
+		background: rgba(248, 250, 252, 0.94);
+		border-top: 1px solid rgba(148, 163, 184, 0.20);
+	}
+
+	.statistics-layout {
+		display: flex;
+		gap: 1.25rem;
+		height: 100%;
+	}
+	.statistics-charts {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		height: 100%;
+		padding: 0.5rem 0;
+	}
+	.chart-card {
+		background: rgba(255, 255, 255, 0.88);
+		border: 1px solid var(--ad-border);
+		border-radius: 28px;
+		box-shadow: var(--ad-shadow);
+		padding: 0.8rem;
+	}
+	.statistics-table {
+		width: 100%;
 	}
 }

@@ -3,5 +3,6 @@
 @layer components {
 	.app-container {
 		@apply fixed w-screen min-h-screen;
+		isolation: isolate;
 	}
 }

@@ -23,6 +23,13 @@ export function TicketsBoard({ openMiniDrawer, user }: TicketsBoardProps) {
 	return (
 		<>
 			<div className={`${openMiniDrawer ? "short-board-container" : "long-board-container"}`}>
+				<div className="board-hero">
+					<div>
+						<div className="board-hero-title">Личный маршрутный центр</div>
+						<div className="board-hero-subtitle">Ваши активные и возвращённые билеты собраны в виде карточек.</div>
+					</div>
+					<div className="board-hero-chip">Tickets</div>
+				</div>
 				{ userInfo &&
 					<Alert
 						sx={{	fontSize: 18 }}

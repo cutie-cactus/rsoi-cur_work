@@ -2,51 +2,75 @@
 
 @layer components {
 	.navbar-button {
-		@apply mx-4 text-2xl text-white min-w-max;
+		@apply mx-4 min-w-max text-white;
+		font-size: 1.62rem;
+		font-weight: 800;
+		letter-spacing: 0.02em;
+		padding: 0.25rem 0.85rem;
+		border-radius: 999px;
+	}
+	.navbar-button::before {
+		content: "✈";
+		margin-right: 0.55rem;
+		color: #67e8f9;
 	}
 	.navbar-button:hover {
-		color: #c9e7ff;
+		background: rgba(255, 255, 255, 0.08);
+		color: #dff6ff;
+	}
+
+	.form-button,
+	.authorize-form-button,
+	.register-button {
+		@apply text-white border border-white/30;
+		background: linear-gradient(135deg, #2563eb, #06b6d4);
+		box-shadow: 0 16px 32px rgba(37, 99, 235, 0.22);
+		font-weight: 750;
+		letter-spacing: 0.01em;
+		transition: all 0.18s ease;
 	}
 
 	.form-button {
-		@apply py-1 px-4 mx-2 w-52 text-white text-xl rounded-3xl border border-white;
-		background-color: #197aca;
+		@apply py-2 px-5 mx-2 w-52 text-xl rounded-2xl;
 	}
-	.form-button:hover {
-		border-width: 2px;
-		background-color: #156fb9;
-	}
-	.form-optionally-button {
-		@apply py-1 px-4 mx-2 w-52 text-xl rounded-3xl bg-white border hover:border-2;
-		border-color: #197aca;
-		color: #197aca;
+	.form-button:hover,
+	.authorize-form-button:hover,
+	.register-button:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 20px 40px rgba(37, 99, 235, 0.30);
+		filter: saturate(1.08);
 	}
 
+	.form-optionally-button,
 	.authorize-button {
-		@apply py-1 px-2 mx-2 w-60 text-xl rounded-3xl border bg-white;
-		border-color: #197aca;
-		color: #197aca;
+		@apply py-2 px-4 mx-2 text-xl rounded-2xl bg-white/10 border;
+		border-color: rgba(255, 255, 255, 0.36);
+		color: #e0f2fe;
+		backdrop-filter: blur(12px);
+		font-weight: 700;
+		transition: all 0.18s ease;
 	}
+	.form-optionally-button {
+		@apply w-52;
+		background: rgba(255, 255, 255, 0.85);
+		color: #2563eb;
+		border-color: rgba(37, 99, 235, 0.20);
+	}
+	.authorize-button {
+		@apply w-44;
+	}
+	.form-optionally-button:hover,
 	.authorize-button:hover {
-		border-width: 2px;
-		background-color: #eff6fd;
+		transform: translateY(-1px);
+		background: rgba(255, 255, 255, 0.18);
+		border-color: rgba(255, 255, 255, 0.56);
 	}
+
 	.register-button {
-		@apply py-1 px-2 mx-2 w-60 text-white text-xl rounded-3xl border border-white;
-		background-color: #197aca;
-	}
-	.register-button:hover {
-		border-width: 2px;
-		color: #c9e7ff;
-		border-color: #c9e7ff;
+		@apply py-2 px-4 mx-2 w-48 text-xl rounded-2xl;
 	}
 
 	.authorize-form-button {
-		@apply py-2 px-4 w-full text-white text-xl rounded-lg border border-white;
-		background-color: #197aca;
-	}
-	.authorize-form-button:hover {
-		border-width: 2px;
-		background-color: #156fb9;
+		@apply py-3 px-4 w-full text-xl rounded-2xl;
 	}
 }

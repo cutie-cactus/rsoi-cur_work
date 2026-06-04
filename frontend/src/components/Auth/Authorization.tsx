@@ -61,11 +61,11 @@ export function Authorization({ changeUser }: AuthorizationProps) {
 					onSubmit={ submitHandler } 
 					onKeyDown={ keyDownHandler }
 				>
-					<TextHeader text="Авторизация"/>
+					<TextHeader text="Вход в AeroDesk"/>
 					
 					<div className="mb-5">
 						<InputRow
-							label="Логин*"
+							label="Логин"
 							value={ login }
 							setValue={ setLogin }
 							isInvalidRow={ invalidLogin }
@@ -75,7 +75,7 @@ export function Authorization({ changeUser }: AuthorizationProps) {
 					</div>
 
 					<InputRow
-						label="Пароль*"
+						label="Пароль"
 						value={ password }
 						setValue={ setPassword }
 						type="password"
@@ -96,7 +96,7 @@ export function Authorization({ changeUser }: AuthorizationProps) {
 
 					<div className="h-11 mt-5 flex flex-col justify-center">
 						<AuthorizeFormButton 
-							text="Войти"
+							text="Продолжить"
 							onClick={ auth }
 						/>
 					</div>

@@ -2,33 +2,48 @@
 
 @layer components {
 	.text-field {
-		@apply text-xl text-gray-600 flex items-center mr-2;
+		@apply text-lg flex items-center mr-2;
+		color: #64748b;
+		font-weight: 600;
 	}
 	.text-subtitle {
-		@apply text-xl text-gray-600 font-bold flex items-center;
+		@apply text-lg font-bold flex items-center;
+		color: #1e293b;
 	}
 	.text-header {
-		@apply text-2xl text-gray-600 flex flex-col items-center justify-center mb-5;
+		@apply flex flex-col items-center justify-center mb-5;
+		font-size: 1.85rem;
+		font-weight: 850;
+		color: #0f172a;
+		letter-spacing: -0.02em;
 	}
 
 	.text-error-page-container {
-		@apply absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center right-0 mx-auto text-gray-600;
+		@apply absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center right-0 mx-auto;
+		color: #334155;
 		transition-property: left;
-		transition-duration: 0.2s;
+		transition-duration: 0.22s;
+		padding: 2rem;
+		border-radius: 32px;
+		background: rgba(255, 255, 255, 0.80);
+		box-shadow: var(--ad-shadow);
+		border: 1px solid var(--ad-border);
 	}
 	.short-text-error-page-container {
 		@apply text-error-page-container;
-		left: 260px;
+		left: 286px;
 	}
 	.long-text-error-page-container {
 		@apply text-error-page-container;
-		left: 65px;
+		left: 90px;
 	}
 	.text-error-page-header {
 		@apply text-3xl flex justify-center min-w-max;
+		font-weight: 850;
 	}
 	.text-error-page {
 		@apply text-2xl flex justify-center mt-5;
 		white-space: pre;
+		color: #64748b;
 	}
 }

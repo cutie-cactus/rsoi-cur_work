@@ -1,6 +1,7 @@
 name: Build & Deploy to Yandex Cloud
 
 on:
+ workflow_dispatch:
  push:
    branches: [ master, yandex-cloud3 ]
  pull_request:
@@ -134,7 +135,17 @@ jobs:
      - name: Wait for all pods
        run: kubectl wait --for=condition=ready pod --all --timeout=300s
 
-     # 12. Диагностика при сбое
+
+     # 12. Автоматическое наполнение демонстрационными данными
+     # SQL-файлы находятся в репозитории в database_seed/.
+     # Runner после деплоя стримит их через kubectl exec прямо в PostgreSQL pod'ы.
+     - name: Seed demo database data
+       run: |
+         chmod +x database_seed/00_seed_all.sh
+         ./database_seed/00_seed_all.sh
+       shell: bash
+
+     # 13. Диагностика при сбое
      - name: Debug on failure
        if: failure()
        run: |

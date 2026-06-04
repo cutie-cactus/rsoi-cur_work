@@ -3,46 +3,99 @@
 @layer components {
 	.board-container {
 		@apply absolute flex flex-col;
-		top: 65px;
-		bottom: 0px;
-		right: 0px;
+		top: 94px;
+		bottom: 26px;
+		right: 26px;
 		transition-property: left;
-		transition-duration: 0.2s;
+		transition-duration: 0.22s;
+		transition-timing-function: ease;
 	}
 	.short-board-container {
 		@apply board-container;
-		left: 260px;
+		left: 286px;
 	}
 	.long-board-container {
 		@apply board-container;
-		left: 65px;
+		left: 90px;
+	}
+
+	.board-hero {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		width: 95%;
+		margin: 0 auto 1rem;
+		padding: 1.2rem 1.5rem;
+		border-radius: 28px;
+		background: linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(30, 64, 175, 0.88));
+		box-shadow: var(--ad-shadow);
+		color: white;
+	}
+	.board-hero-title {
+		font-size: 1.85rem;
+		font-weight: 850;
+		line-height: 1.15;
+	}
+	.board-hero-subtitle {
+		margin-top: 0.25rem;
+		color: #bfdbfe;
+		font-size: 1rem;
+	}
+	.board-hero-chip {
+		padding: 0.75rem 1rem;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.12);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		font-weight: 800;
 	}
 
 	.board {
 		@apply container mx-auto my-auto;
-		height: 95%;
+		height: 88%;
 		width: 95%;
 		position: relative;
 		overflow-y: scroll;
 		scroll-behavior: smooth;
+		border-radius: 32px;
+		background: rgba(255, 255, 255, 0.62);
+		border: 1px solid var(--ad-border);
+		box-shadow: var(--ad-shadow);
 	}
 
 	.tickets-list {
 		@apply mx-auto px-5 py-5;
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
-		gap: 30px;
+		grid-template-columns: repeat(3, minmax(280px, 1fr));
+		gap: 24px;
 		width: 100%;
 	}
 	.tickets-item {
-		@apply flex flex-col bg-white p-4 rounded-lg;
-		box-shadow: 0 0 20px #d1d5db;
+		@apply flex flex-col p-5;
+		position: relative;
+		border-radius: 28px;
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.92));
+		border: 1px solid rgba(47, 111, 237, 0.12);
+		box-shadow: 0 18px 40px rgba(15, 23, 42, 0.09);
+		transition: all 0.18s ease;
+		overflow: hidden;
+	}
+	.tickets-item::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 6px;
+		background: linear-gradient(180deg, #2563eb, #06b6d4);
 	}
 	.tickets-item:hover {
-		box-shadow: 0 0 20px #9ca3af;
+		transform: translateY(-3px);
+		box-shadow: 0 24px 52px rgba(37, 99, 235, 0.16);
 	}
 
 	.tickets-info {
-		@apply flex flex-col text-xl text-gray-600;
+		@apply flex flex-col text-lg;
+		color: #334155;
 	}
 }

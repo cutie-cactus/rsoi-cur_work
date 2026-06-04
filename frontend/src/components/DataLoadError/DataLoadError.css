@@ -3,16 +3,25 @@
 @layer components {
 	.container-load-error {
 		@apply w-full h-full min-w-min min-h-min flex flex-col justify-center items-center;
+		color: #334155;
 	}
 	.text-load-error {
-		@apply text-xl text-gray-600;
+		@apply text-xl;
+		color: #64748b;
 	}
 
 	.container-update {
-		@apply flex flex-row mt-1 p-1 pr-2 rounded-full hover:bg-blue-600/10;
+		@apply flex flex-row mt-3 p-2 pr-3 rounded-full;
+		background: rgba(37, 99, 235, 0.08);
+		transition: all 0.18s ease;
+	}
+	.container-update:hover {
+		background: rgba(37, 99, 235, 0.14);
+		transform: translateY(-1px);
 	}
 	.text-update {
 		@apply text-base ml-1;
-		color: #197aca;
+		font-weight: 800;
+		color: #2563eb;
 	}
 }

@@ -67,22 +67,26 @@ export function StatisticsTable() {
 	];
 	return (
 		<>
-			<div className="flex flex-row h-full">
-				<div className="flex flex-col h-full mr-5">
+			<div className="statistics-layout">
+				<div className="statistics-charts">
+					<div className="chart-card">
 					<PieChart 
 						series={[{data: statusCodeData, innerRadius: 80 }]
 					} {...size}>
 						<PieCenterLabel>Status</PieCenterLabel>
 					</PieChart>
+					</div>
 
+					<div className="chart-card">
 					<PieChart 
 						series={[{data: methodData, innerRadius: 80 }]
 					} {...size}>
 						<PieCenterLabel>Method</PieCenterLabel>
 					</PieChart>
+					</div>
 				</div>
 
-				<div className="mx-5 table">
+				<div className="table statistics-table">
 					<StatisticsTitleRow />
 
 					<div className="rows-container">

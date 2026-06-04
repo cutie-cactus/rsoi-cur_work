@@ -27,7 +27,7 @@ export function UserInfo({ user }: UserInfoProps) {
 				text={ user.role }
 			/>
 			<TextRow 
-				label="Почта"
+				label="Email"
 				text={ user.email }
 			/>
 			<TextRow 

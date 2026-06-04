@@ -79,11 +79,11 @@ export function Registration({ changeUser }: RegistrationProps) {
 					onSubmit={ submitHandler } 
 					onKeyDown={ keyDownHandler }
 				>
-					<TextHeader text="Регистрация"/>
+					<TextHeader text="Создание профиля"/>
 					
 					<div className="mb-5">
 						<InputRow
-							label="Логин*"
+							label="Логин"
 							value={ login }
 							setValue={ setLogin }
 							isInvalidRow={ invalidLogin }
@@ -94,7 +94,7 @@ export function Registration({ changeUser }: RegistrationProps) {
 
 					<div className="mb-5">
 						<InputRow
-							label="Пароль*"
+							label="Пароль"
 							value={ password }
 							setValue={ setPassword }
 							type="password"
@@ -106,7 +106,7 @@ export function Registration({ changeUser }: RegistrationProps) {
 
 					<div className="mb-5">
 						<InputRow
-							label="Фамилия*"
+							label="Фамилия"
 							value={ lastname }
 							setValue={ setLastname }
 							isInvalidRow={ invalidLastname }
@@ -117,7 +117,7 @@ export function Registration({ changeUser }: RegistrationProps) {
 
 					<div className="mb-5">
 						<InputRow
-							label="Имя*"
+							label="Имя"
 							value={ firstname }
 							setValue={ setFirstname }
 							isInvalidRow={ invalidFirstname }
@@ -128,7 +128,7 @@ export function Registration({ changeUser }: RegistrationProps) {
 
 					<div className="mb-5">
 						<InputRow
-							label="Почта*"
+							label="Email"
 							value={ email }
 							setValue={ setEmail }
 							isInvalidRow={ invalidEmail }
@@ -138,7 +138,7 @@ export function Registration({ changeUser }: RegistrationProps) {
 					</div>
 
 					<InputRow
-						label="Телефон*"
+						label="Телефон"
 						value={ phone }
 						setValue={ setPhone }
 						isInvalidRow={ invalidPhone }
@@ -158,7 +158,7 @@ export function Registration({ changeUser }: RegistrationProps) {
 
 					<div className="h-11 mt-5 flex flex-col justify-center">
 						<AuthorizeFormButton 
-							text="Зарегистрироваться"
+							text="Создать аккаунт"
 							onClick={ register }
 						/>
 					</div>

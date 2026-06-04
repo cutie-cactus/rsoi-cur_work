@@ -22,8 +22,8 @@ export function TicketsItem({ ticket, ticketRefund }: TicketsItemProps) {
 				<div className="tickets-info">
 
 					<div className="flex flex-row w-full items-center">
-						<div className="w-full font-bold">
-							{ `${ticket.flightNumber}` }
+						<div className="w-full font-bold text-2xl text-slate-900">
+							{ `Рейс ${ticket.flightNumber}` }
 						</div>
 
 						{ ticket.status === "PAID" &&
@@ -37,28 +37,28 @@ export function TicketsItem({ ticket, ticketRefund }: TicketsItemProps) {
 
 					<div className="mt-3">
 						<TextRow 
-							label="Аэропорт отправления"
+							label="Откуда"
 							text={ `${ticket.fromAirport} ` } 
 						/>
 					</div>
 
 					<div className="mt-3">
 						<TextRow 
-							label="Аэропорт прибытия"
+							label="Куда"
 							text={ `${ticket.toAirport} ` } 
 						/>
 					</div>
 
 					<div className="mt-3">
 						<TextRow 
-							label="Дата и время отправления"
+							label="Вылет"
 							text={ `${ticket.date} ` } 
 						/>
 					</div>
 
 					<div className="my-3">
 						<TextRow 
-							label="Цена билета"
+							label="Тариф"
 							text={ `${ticket.price} ` } 
 						/>
 					</div>
@@ -68,13 +68,13 @@ export function TicketsItem({ ticket, ticketRefund }: TicketsItemProps) {
 								sx={{	fontSize: 18 }}
 								severity="success"
 							>
-								{`Билет оплачен`}
+								{`Оплачен`}
 							</Alert>
 						: <Alert
 								sx={{	fontSize: 18 }}
 								severity="warning"
 							>
-								{`Билет сдан`}
+								{`Возвращён`}
 							</Alert>
 					}
 					
@@ -83,7 +83,7 @@ export function TicketsItem({ ticket, ticketRefund }: TicketsItemProps) {
 
 			{ confirmDeleteWindow.visibility && 
 				<ConfirmationWindow 
-					header="Подтвердите возврат билета"
+					header="Возврат билета"
 					onClose={ confirmDeleteWindow.handleCloseWindow }
 					onConfirm={ async () => {
 							await ticketRefund(ticket.ticketUid);
@@ -92,34 +92,34 @@ export function TicketsItem({ ticket, ticketRefund }: TicketsItemProps) {
 					}
 				>
 					<TextRow 
-						label="Номер рейса"
+						label="Рейс"
 						text={ `${ticket.flightNumber} ` } 
 					/>
 
 					<div className="mt-5">
 						<TextRow 
-							label="Аэропорт отправления"
+							label="Откуда"
 							text={ `${ticket.fromAirport} ` } 
 						/>
 					</div>
 
 					<div className="mt-5">
 						<TextRow 
-							label="Аэропорт прибытия"
+							label="Куда"
 							text={ `${ticket.toAirport} ` } 
 						/>
 					</div>
 
 					<div className="mt-5">
 						<TextRow 
-							label="Дата и время отправления"
+							label="Вылет"
 							text={ `${ticket.date} ` } 
 						/>
 					</div>
 
 					<div className="mt-5">
 						<TextRow 
-							label="Цена билета"
+							label="Тариф"
 							text={ `${ticket.price} ` } 
 						/>
 					</div>

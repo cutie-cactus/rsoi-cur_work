@@ -2,19 +2,20 @@
 
 @layer components {
 	.page-container {
-		@apply absolute m-5;
-		top: 65px;
-		bottom: 0px;
-		right: 0px;
+		@apply absolute;
+		top: 94px;
+		bottom: 26px;
+		right: 26px;
 		transition-property: left;
-		transition-duration: 0.2s;
+		transition-duration: 0.22s;
+		transition-timing-function: ease;
 	}
 	.short-page-container {
 		@apply page-container;
-		left: 260px;
+		left: 286px;
 	}
 	.long-page-container {
 		@apply page-container;
-		left: 65px;
+		left: 90px;
 	}
 }

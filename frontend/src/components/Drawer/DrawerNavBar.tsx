@@ -58,7 +58,7 @@ export function DrawerNavBar(props: DrawerNavBarProps) {
 				</IconButton>
 
 				<NavBarButton 
-					text="Flight Booking System"
+					text="AeroDesk"
 					link="/"
 				/>
 
@@ -76,7 +76,7 @@ export function DrawerNavBar(props: DrawerNavBarProps) {
 								/>
 							:
 								<AuthorizeButton 
-									text="Авторизоваться"
+									text="Вход"
 									link="/authorization"
 								/>
 						}
@@ -85,7 +85,7 @@ export function DrawerNavBar(props: DrawerNavBarProps) {
 					{ !props.user &&
 						<div className="authorization-button-container">
 							<RegisterButtom 
-								text="Зарегистрироваться"
+								text="Создать профиль"
 								link="/registration"
 							/>
 						</div>

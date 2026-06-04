@@ -7,9 +7,9 @@ export function StatisticsTitleRow() {
 			className="title-row-without-buttons"
 		>
 			<div className="title-row-item basis-1/6">{ "Метод" }</div>
-			<div className="title-row-item basis-1/2">{ "Url" }</div>
-			<div className="title-row-item basis-1/6">{ "Статус" }</div>
-			<div className="title-row-item basis-1/4">{ "Время" }</div>
+			<div className="title-row-item basis-1/2">{ "Endpoint" }</div>
+			<div className="title-row-item basis-1/6">{ "Код" }</div>
+			<div className="title-row-item basis-1/4">{ "Timestamp" }</div>
 		</div>
 	)
 }
