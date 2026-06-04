@@ -6,7 +6,7 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS public.privilege (
     id serial PRIMARY KEY,
     username varchar(80) NOT NULL UNIQUE,
-    status varchar(80) NOT NULL DEFAULT 'BRONZE' CHECK (status IN ('BRONZE', 'SILVER', 'GOLD')),
+    status varchar(80) NOT NULL DEFAULT 'STANDARD' CHECK (status IN ('STANDARD', 'BRONZE', 'SILVER', 'GOLD')),
     balance integer
 );
 
@@ -20,6 +20,12 @@ CREATE TABLE IF NOT EXISTS public.privilege_history (
 );
 
 TRUNCATE TABLE public.privilege_history, public.privilege RESTART IDENTITY CASCADE;
+
+-- Возвращаем типы бонусного счёта для демонстрации программы лояльности.
+-- Критерии расчёта здесь не вводятся: это заранее подготовленные демо-статусы.
+ALTER TABLE public.privilege DROP CONSTRAINT IF EXISTS privilege_status_check;
+ALTER TABLE public.privilege ALTER COLUMN status SET DEFAULT 'STANDARD';
+ALTER TABLE public.privilege ADD CONSTRAINT privilege_status_check CHECK (status IN ('STANDARD', 'BRONZE', 'SILVER', 'GOLD'));
 
 INSERT INTO public.privilege (username, status, balance) VALUES
 ('ivan',      'GOLD',   2460),

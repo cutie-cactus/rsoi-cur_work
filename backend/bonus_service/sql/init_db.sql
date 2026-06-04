@@ -27,8 +27,8 @@ SET default_table_access_method = heap;
 CREATE TABLE public.privilege (
     id integer NOT NULL,
     username character varying(80) NOT NULL,
-    status character varying(80) NOT NULL DEFAULT 'BRONZE'
-        CHECK (status IN ('BRONZE', 'SILVER', 'GOLD')),
+    status character varying(80) NOT NULL DEFAULT 'STANDARD'
+        CHECK (status IN ('STANDARD', 'BRONZE', 'SILVER', 'GOLD')),
     balance integer
 );
 

@@ -8,5 +8,5 @@ class PrivilegeModel(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(80), nullable=False, unique=True)
-    status = Column(String(80), nullable=False, default="BRONZE")
+    status = Column(String(80), nullable=False, default="STANDARD")
     balance = Column(Integer)

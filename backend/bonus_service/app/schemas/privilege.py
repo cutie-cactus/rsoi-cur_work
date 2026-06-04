@@ -21,7 +21,7 @@ class PrivilegeUpdate(BaseModel):
 
 
 class PrivilegeCreate(PrivilegeBase):
-    status: PrivilegeStatus = "BRONZE"
+    status: PrivilegeStatus = "STANDARD"
     balance: Annotated[int, conint(ge=0)] | None = None
 
 
