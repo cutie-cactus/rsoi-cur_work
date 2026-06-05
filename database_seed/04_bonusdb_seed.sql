@@ -26,10 +26,7 @@ INSERT INTO public.privilege (username, status, balance) VALUES
 ('alina',     'SILVER', 1760),
 ('demo',      'BRONZE',  543),
 ('admin',     'GOLD',   3000),
-('anna',      'GOLD',   2600),
-('cutie_cactus', 'GOLD', 2500),
-('moderator', 'SILVER', 1500),
-('user1',     'BRONZE',  720)
+('moderator', 'SILVER', 1500)
 ON CONFLICT (username) DO UPDATE SET
     status = EXCLUDED.status,
     balance = EXCLUDED.balance;
