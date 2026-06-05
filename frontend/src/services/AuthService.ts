@@ -9,7 +9,7 @@ export default class AuthService {
   static async login(login: string, password: string): Promise<string | null>  {
     const response = await $apiAuth.post<IAuthResponse>(
       "/user/login/",
-      {login, password},
+      {login, password, scope: ["openid", "profile", "email"]},
     ).catch((error) => {
       var errorMessage: string;
       if (isAxiosError(error)) {

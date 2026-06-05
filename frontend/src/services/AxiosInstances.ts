@@ -31,7 +31,7 @@ api.interceptors.response.use(
         const refreshToken = localStorage.getItem("refreshToken");
         const response = await axios.post<IAuthResponse>(
           `${config.api.baseUrl}/user/refresh/`,
-          { refresh_token: refreshToken }
+          { refresh_token: refreshToken, scope: ["openid", "profile", "email"] }
         );
         const newAccessToken = response.data.access_token;
         if (newAccessToken) {
