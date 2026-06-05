@@ -26,7 +26,7 @@ run_sql() {
   kubectl exec -i -n "$NS" "$pod_name" -- psql -U postgres -d "$db_name" < "${SCRIPT_DIR}/${sql_file}"
 }
 
-# run_sql authdb       authdb       01_authdb_seed.sql
+run_sql authdb       authdb       01_authdb_seed.sql
 run_sql flightdb     flightdb     02_flightdb_seed.sql
 run_sql ticketdb     ticketdb     03_ticketdb_seed.sql
 run_sql bonusdb      bonusdb      04_bonusdb_seed.sql
