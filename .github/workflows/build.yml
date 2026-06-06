@@ -40,37 +40,37 @@ jobs:
        shell: bash
 
     #  # 3. Сборка и публикация backend-образов
-    #  - name: Build and push backend images
-    #    run: |
-    #      cd backend
-    #      docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/bonus-service:latest -f ./docker/bonus.Dockerfile .
-    #      docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/flight-service:latest -f ./docker/flight.Dockerfile .
-    #      docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/ticket-service:latest -f ./docker/ticket.Dockerfile .
-    #      docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/auth-service:latest -f ./docker/auth.Dockerfile .
-    #      docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/gateway-service:latest -f ./docker/gateway.Dockerfile .
-    #      docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/statistics-service:latest -f ./docker/statistics.Dockerfile .
-    #      docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/consumer-service:latest -f ./docker/consumer.Dockerfile .
+     - name: Build and push backend images
+       run: |
+         cd backend
+         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/bonus-service:latest -f ./docker/bonus.Dockerfile .
+         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/flight-service:latest -f ./docker/flight.Dockerfile .
+         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/ticket-service:latest -f ./docker/ticket.Dockerfile .
+         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/auth-service:latest -f ./docker/auth.Dockerfile .
+         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/gateway-service:latest -f ./docker/gateway.Dockerfile .
+         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/statistics-service:latest -f ./docker/statistics.Dockerfile .
+         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/consumer-service:latest -f ./docker/consumer.Dockerfile .
 
-    #      docker push cr.yandex/${{ env.REGISTRY_ID }}/bonus-service:latest
-    #      docker push cr.yandex/${{ env.REGISTRY_ID }}/flight-service:latest
-    #      docker push cr.yandex/${{ env.REGISTRY_ID }}/ticket-service:latest
-    #      docker push cr.yandex/${{ env.REGISTRY_ID }}/auth-service:latest
-    #      docker push cr.yandex/${{ env.REGISTRY_ID }}/gateway-service:latest
-    #      docker push cr.yandex/${{ env.REGISTRY_ID }}/statistics-service:latest
-    #      docker push cr.yandex/${{ env.REGISTRY_ID }}/consumer-service:latest
+         docker push cr.yandex/${{ env.REGISTRY_ID }}/bonus-service:latest
+         docker push cr.yandex/${{ env.REGISTRY_ID }}/flight-service:latest
+         docker push cr.yandex/${{ env.REGISTRY_ID }}/ticket-service:latest
+         docker push cr.yandex/${{ env.REGISTRY_ID }}/auth-service:latest
+         docker push cr.yandex/${{ env.REGISTRY_ID }}/gateway-service:latest
+         docker push cr.yandex/${{ env.REGISTRY_ID }}/statistics-service:latest
+         docker push cr.yandex/${{ env.REGISTRY_ID }}/consumer-service:latest
 
     #  # 4. Сборка и публикация frontend-образа
     #  # Важно: кроме latest публикуем тег с SHA коммита.
     #  # Так Kubernetes точно увидит новый образ клиента, а не продолжит использовать старый latest.
-    #  - name: Build and push frontend image
-    #    run: |
-    #      cd frontend
-    #      docker build --no-cache \
-    #        -t cr.yandex/${{ env.REGISTRY_ID }}/dips-client:latest \
-    #        -t cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA} \
-    #        .
-    #      docker push cr.yandex/${{ env.REGISTRY_ID }}/dips-client:latest
-    #      docker push cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA}
+     - name: Build and push frontend image
+       run: |
+         cd frontend
+         docker build --no-cache \
+           -t cr.yandex/${{ env.REGISTRY_ID }}/dips-client:latest \
+           -t cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA} \
+           .
+         docker push cr.yandex/${{ env.REGISTRY_ID }}/dips-client:latest
+         docker push cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA}
 
      # 5. Получение kubeconfig для кластера
      - name: Get k8s credentials
@@ -78,20 +78,20 @@ jobs:
          yc managed-kubernetes cluster get-credentials ${{ env.K8S_CLUSTER_ID }} --external --force
 
      # 6. ConfigMap'ы со скриптами инициализации БД
-    #  - name: Create init-sql ConfigMaps
-    #    run: |
+     - name: Create init-sql ConfigMaps
+       run: |
 
-    #      kubectl delete deployment my-app-bonus-service-dep my-app-flight-service-dep my-app-ticket-service-dep my-app-auth-service-dep my-app-statistics-service-dep my-app-consumer-service-dep my-app-gateway-service-dep my-app-dips-client-dep
+         kubectl delete deployment my-app-bonus-service-dep my-app-flight-service-dep my-app-ticket-service-dep my-app-auth-service-dep my-app-statistics-service-dep my-app-consumer-service-dep my-app-gateway-service-dep my-app-dips-client-dep
 #          kubectl delete deployment authdb bonusdb flightdb ticketdb statisticsdb
 
-    #  - name: Force unlock db release
-    #    run: |
-    #      echo "Deleting Helm secrets for release 'db'..."
-    #      kubectl delete secret -l owner=helm,name=db --ignore-not-found
-    #      echo "Attempting to uninstall any lingering release..."
-    #      helm uninstall db --ignore-not-found 2>/dev/null || true
-    #      echo "Release lock cleared."
-    #    shell: bash
+     - name: Force unlock db release
+       run: |
+         echo "Deleting Helm secrets for release 'db'..."
+         kubectl delete secret -l owner=helm,name=db --ignore-not-found
+         echo "Attempting to uninstall any lingering release..."
+         helm uninstall db --ignore-not-found 2>/dev/null || true
+         echo "Release lock cleared."
+       shell: bash
 
      # 7. Удаление старого релиза Kafka (если есть)
      - name: Remove old Kafka release if present
@@ -119,12 +119,12 @@ jobs:
 
      # 9. Деплой приложения с переопределением образа frontend
      # Без этого chart может брать старый образ из values.yaml или не менять pod, если тег latest не изменился в spec.
-    #  - name: Deploy application services
-    #    run: |
-    #      helm upgrade --install my-app ./k8s/app-chart \
-    #        -f ./k8s/app-chart/values.yaml \
-    #        --set services.dips-client.container=cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA} \
-    #        --wait --timeout 15m
+     - name: Deploy application services
+       run: |
+         helm upgrade --install my-app ./k8s/app-chart \
+           -f ./k8s/app-chart/values.yaml \
+           --set services.dips-client.container=cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA} \
+           --wait --timeout 15m
 
      # 10. Применяем Ingress правила
      - name: Apply Ingress rules
