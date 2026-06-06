@@ -1,5 +1,6 @@
 import Alert from '@mui/material/Alert';
 import Switch from '@mui/material/Switch';
+import TextField from '@mui/material/TextField';
 import { useNavigate } from "react-router-dom";
 
 import "./ModalWindows.css";
@@ -8,7 +9,7 @@ import { Backdrop } from "./Backdrop";
 import { FormButton } from "../Buttons/FormButton";
 import { FormOptionallyButton } from "../Buttons/FormOptionallyButton";
 import { TextHeader } from "../Texts/TextHeader";
-import { TextField } from "../Texts/TextField";
+import { TextField as StaticTextField } from "../Texts/TextField";
 import { TextRow } from '../Texts/TextRow';
 import { ConfirmationWindow } from "./ConfirmationWindow";
 import { ITicketResponse } from '../../interfaces/Ticket/ITicketResponse';
@@ -37,13 +38,19 @@ export function BuyTicketWindow(props: BuyTicketWindowProps) {
 		}
 	};
 
+	const availableSeats = props.flight.availableSeats ?? 1;
+	const maxQuantity = Math.max(1, availableSeats || 1);
 	const { 
 		paidFromBalance,
 		setPaidFromBalance,
-	} = useBuyTicketForm();
+		quantity,
+		setQuantity,
+	} = useBuyTicketForm(maxQuantity);
 
 	const confirmBuyWindow = useWindow();
 	const navigate = useNavigate();
+	const totalPrice = props.flight.price * quantity;
+	const bonusText = props.privilege ? `${props.privilege.balance}` : "0";
 	
 	return (
 		<>
@@ -54,24 +61,50 @@ export function BuyTicketWindow(props: BuyTicketWindowProps) {
 					onSubmit={ submitHandler } 
 					onKeyDown={ keyDownHandler }
 				>
-					<TextHeader text="Покупка билета"/>
+					<TextHeader text="Покупка билетов"/>
 
 					<Alert
-						sx={{	fontSize: 18 }}
+						sx={{	fontSize: 18, borderRadius: 3 }}
 						severity="info"
 					>
-						{`Вам доступно ${props.privilege?.balance} бонусов`}
+						{`Доступно мест на рейс: ${availableSeats}. На бонусном счёте: ${bonusText}.`}
 					</Alert>
 
-					<div className="m-5 flex flex-row justify-center items-center">
+					<div className="m-5 grid gap-4">
 						<TextField
-							text="Воспользоваться бонусами для оплаты билета"
-							addClassName="w-full"
+							label="Количество билетов"
+							type="number"
+							value={quantity}
+							inputProps={{ min: 1, max: availableSeats }}
+							onChange={(event) => setQuantity(Number(event.target.value))}
+							helperText={`Можно купить от 1 до ${availableSeats} билетов. Каждый билет будет отдельным и будет сдаваться отдельно.`}
+							fullWidth
 						/>
-						<Switch 
-							checked={ paidFromBalance }
-							onChange={ () => setPaidFromBalance(!paidFromBalance) }
-						/>
+
+						<div className="flex flex-row gap-3">
+							<FormOptionallyButton
+								text="1 билет"
+								onClick={() => setQuantity(1)}
+							/>
+							<FormOptionallyButton
+								text="Выкупить все места"
+								onClick={() => setQuantity(availableSeats)}
+							/>
+						</div>
+
+						<div className="flex flex-row justify-center items-center">
+							<StaticTextField
+								text="Воспользоваться бонусами для оплаты билетов"
+								addClassName="w-full"
+							/>
+							<Switch 
+								checked={ paidFromBalance }
+								onChange={ () => setPaidFromBalance(!paidFromBalance) }
+							/>
+						</div>
+						<Alert sx={{ fontSize: 16, borderRadius: 3 }} severity="success">
+							{`Итоговая стоимость без учёта бонусов: ${totalPrice} ₽ за ${quantity} шт.`}
+						</Alert>
 					</div>
 
 					<div className="central-buttons">
@@ -89,19 +122,7 @@ export function BuyTicketWindow(props: BuyTicketWindowProps) {
 
 			{ confirmBuyWindow.visibility && 
 				<ConfirmationWindow 
-					header="Подтвердите закрытие окна"
-					onClose={ props.onClose }
-					onConfirm={ () => {
-							confirmBuyWindow.handleCloseWindow();
-							props.onClose();
-						}
-					}
-				/>
-			}
-
-			{ confirmBuyWindow.visibility && 
-				<ConfirmationWindow 
-					header="Подтвердите покупку билета"
+					header="Подтвердите покупку"
 					children={
 						<>
 							<div className="mb-5">
@@ -112,14 +133,8 @@ export function BuyTicketWindow(props: BuyTicketWindowProps) {
 							</div>
 							<div className="mb-5">
 								<TextRow
-									label="Аэропорт отправления"
-									text={ props.flight.fromAirport }
-								/>
-							</div>
-							<div className="mb-5">
-								<TextRow
-									label="Аэропорт прибытия"
-									text={ props.flight.toAirport }
+									label="Маршрут"
+									text={ `${props.flight.fromAirport} → ${props.flight.toAirport}` }
 								/>
 							</div>
 							<div className="mb-5">
@@ -128,9 +143,15 @@ export function BuyTicketWindow(props: BuyTicketWindowProps) {
 									text={ props.flight.date }
 								/>
 							</div>
+							<div className="mb-5">
+								<TextRow
+									label="Количество"
+									text={ `${quantity}` }
+								/>
+							</div>
 							<TextRow
-								label="Цена"
-								text={ `${props.flight.price}` }
+								label="Итого"
+								text={ `${totalPrice} ₽` }
 							/>
 						</>
 					}
@@ -141,6 +162,7 @@ export function BuyTicketWindow(props: BuyTicketWindowProps) {
 									flightNumber: props.flight.flightNumber,
 									price: props.flight.price,
 									paidFromBalance,
+									quantity,
 								}
 							);
 							if (response) {

@@ -1,20 +1,24 @@
+import json
+
 import requests
 from cruds.base import BaseCRUD
 from cruds.interfaces.flight import IFlightCRUD
 from enums.sort import SortFlights
+from fastapi.security import HTTPAuthorizationCredentials
 from requests import Response
-from schemas.flight import FlightFilter
+from schemas.flight import FlightFilter, FlightUpdate
 from utils.curcuit_breaker import CircuitBreaker
 from utils.settings import get_settings
 
 
 class FlightCRUD(IFlightCRUD, BaseCRUD):
-    def __init__(self) -> None:
+    def __init__(self, token: HTTPAuthorizationCredentials | None = None) -> None:
         settings = get_settings()
         flight_host = settings["services"]["gateway"]["flight_host"]
         flight_port = settings["services"]["flight"]["port"]
 
         self.http_path = f"http://{flight_host}:{flight_port}/api/v1/"
+        self.token = token
 
     async def get_all_flights(
         self,
@@ -51,6 +55,30 @@ class FlightCRUD(IFlightCRUD, BaseCRUD):
         response: Response = CircuitBreaker.send_request(
             url=f"{self.http_path}airports/{airport_id}/",
             http_method=requests.get,
+        )
+        self._check_status_code(
+            status_code=response.status_code,
+            service_name="Flight Service",
+        )
+
+        return response.json()
+
+    async def update_flight_by_id(
+        self,
+        flight_id: int,
+        flight_update: FlightUpdate,
+    ) -> dict:
+        headers = {}
+        if self.token:
+            headers = {
+                "Authorization": self.token.scheme + " " + self.token.credentials,
+            }
+
+        response: Response = CircuitBreaker.send_request(
+            url=f"{self.http_path}flights/{flight_id}/",
+            http_method=requests.patch,
+            headers=headers,
+            data=flight_update.model_dump(mode="json", exclude_unset=True),
         )
         self._check_status_code(
             status_code=response.status_code,

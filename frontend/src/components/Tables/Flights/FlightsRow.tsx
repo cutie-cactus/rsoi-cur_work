@@ -19,21 +19,29 @@ interface FlightsRowProps {
 
 export function FlightsRow(props: FlightsRowProps) {
 	const buyTicketWindow = useWindow();
+	const availableSeats = props.flight.availableSeats ?? 0;
+	const capacity = props.flight.capacity ?? availableSeats;
+	const isSoldOut = availableSeats <= 0;
 
 	return (
 		<>
 			<div
-				className={ `row ${ props.addClassName }` }
-				onDoubleClick={ props.user ? buyTicketWindow.handleOpenWindow : undefined }
+				className={ `row ${ props.addClassName } ${isSoldOut ? "opacity-60" : ""}` }
+				onDoubleClick={ props.user && !isSoldOut ? buyTicketWindow.handleOpenWindow : undefined }
 			>
-				<div className="row-item basis-1/6">{ `№ ${props.flight.flightNumber}` }</div>
-				<div className="row-item basis-1/4">{ props.flight.fromAirport }</div>
-				<div className="row-item basis-1/4">{ props.flight.toAirport }</div>
-				<div className="row-item basis-1/5">{ props.flight.date }</div>
-				<div className="row-item basis-1/6">{ `${props.flight.price} ₽` }</div>
+				<div className="row-item basis-[13%]">{ `№ ${props.flight.flightNumber}` }</div>
+				<div className="row-item basis-[20%]">{ props.flight.fromAirport }</div>
+				<div className="row-item basis-[20%]">{ props.flight.toAirport }</div>
+				<div className="row-item basis-[17%]">{ props.flight.date }</div>
+				<div className="row-item basis-[12%]">{ `${props.flight.price} ₽` }</div>
+				<div className="row-item basis-[12%]">
+					<span className={isSoldOut ? "text-red-700 font-bold" : "text-emerald-700 font-bold"}>
+						{isSoldOut ? "нет мест" : `${availableSeats}/${capacity}`}
+					</span>
+				</div>
 				
 				<div className="actions">
-					{ props.user && 
+					{ props.user && !isSoldOut &&
 						<PayIcon 
 							color="gray"
 							addClassName="px-2 py-2"

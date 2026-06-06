@@ -39,29 +39,27 @@ jobs:
          yc container registry configure-docker
        shell: bash
 
-    #  # 3. Сборка и публикация backend-образов
+     # 3. Сборка и публикация backend-образов
+     # Важно: публикуем не только latest, но и тег с SHA коммита.
+     # Так Kubernetes точно возьмёт новую версию backend, а не старый latest из values.yaml.
      - name: Build and push backend images
        run: |
          cd backend
-         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/bonus-service:latest -f ./docker/bonus.Dockerfile .
-         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/flight-service:latest -f ./docker/flight.Dockerfile .
-         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/ticket-service:latest -f ./docker/ticket.Dockerfile .
-         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/auth-service:latest -f ./docker/auth.Dockerfile .
-         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/gateway-service:latest -f ./docker/gateway.Dockerfile .
-         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/statistics-service:latest -f ./docker/statistics.Dockerfile .
-         docker build --no-cache -t cr.yandex/${{ env.REGISTRY_ID }}/consumer-service:latest -f ./docker/consumer.Dockerfile .
 
-         docker push cr.yandex/${{ env.REGISTRY_ID }}/bonus-service:latest
-         docker push cr.yandex/${{ env.REGISTRY_ID }}/flight-service:latest
-         docker push cr.yandex/${{ env.REGISTRY_ID }}/ticket-service:latest
-         docker push cr.yandex/${{ env.REGISTRY_ID }}/auth-service:latest
-         docker push cr.yandex/${{ env.REGISTRY_ID }}/gateway-service:latest
-         docker push cr.yandex/${{ env.REGISTRY_ID }}/statistics-service:latest
-         docker push cr.yandex/${{ env.REGISTRY_ID }}/consumer-service:latest
+         for service in bonus flight ticket auth gateway statistics consumer; do
+           docker build --no-cache \
+             -t cr.yandex/${{ env.REGISTRY_ID }}/${service}-service:latest \
+             -t cr.yandex/${{ env.REGISTRY_ID }}/${service}-service:${GITHUB_SHA} \
+             -f ./docker/${service}.Dockerfile .
 
-    #  # 4. Сборка и публикация frontend-образа
-    #  # Важно: кроме latest публикуем тег с SHA коммита.
-    #  # Так Kubernetes точно увидит новый образ клиента, а не продолжит использовать старый latest.
+           docker push cr.yandex/${{ env.REGISTRY_ID }}/${service}-service:latest
+           docker push cr.yandex/${{ env.REGISTRY_ID }}/${service}-service:${GITHUB_SHA}
+         done
+       shell: bash
+
+     # 4. Сборка и публикация frontend-образа
+     # Важно: кроме latest публикуем тег с SHA коммита.
+     # Так Kubernetes точно увидит новый образ клиента, а не продолжит использовать старый latest.
      - name: Build and push frontend image
        run: |
          cd frontend
@@ -71,71 +69,121 @@ jobs:
            .
          docker push cr.yandex/${{ env.REGISTRY_ID }}/dips-client:latest
          docker push cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA}
+       shell: bash
 
      # 5. Получение kubeconfig для кластера
      - name: Get k8s credentials
        run: |
          yc managed-kubernetes cluster get-credentials ${{ env.K8S_CLUSTER_ID }} --external --force
+       shell: bash
 
-#      # 6. ConfigMap'ы со скриптами инициализации БД
-#      - name: Create init-sql ConfigMaps
-#        run: |
+     # 6. Очистка старых ресурсов перед новым деплоем
+     # Это нужно после остановки/запуска кластера и после изменения схем БД.
+     # Команды безопасные: если ресурсов нет, workflow не упадёт.
+     - name: Clean old Kubernetes resources
+       run: |
+         echo "=== Nodes ==="
+         kubectl get nodes -o wide || true
 
-#          kubectl delete deployment my-app-bonus-service-dep my-app-flight-service-dep my-app-ticket-service-dep my-app-auth-service-dep my-app-statistics-service-dep my-app-consumer-service-dep my-app-gateway-service-dep my-app-dips-client-dep
-# #          kubectl delete deployment authdb bonusdb flightdb ticketdb statisticsdb
+         echo "Cleaning stuck pods..."
+         kubectl get pods --no-headers 2>/dev/null | awk '$3=="Terminating" || $3=="Completed" || $3=="Error" {print $1}' | xargs -r kubectl delete pod --force --grace-period=0 || true
 
-#      - name: Force unlock db release
-#        run: |
-#          echo "Deleting Helm secrets for release 'db'..."
-#          kubectl delete secret -l owner=helm,name=db --ignore-not-found
-#          echo "Attempting to uninstall any lingering release..."
-#          helm uninstall db --ignore-not-found 2>/dev/null || true
-#          echo "Release lock cleared."
-#        shell: bash
+         echo "Unlocking Helm releases..."
+         helm uninstall my-app --ignore-not-found --wait=false || true
+         helm uninstall db --ignore-not-found --wait=false || true
 
-     # 7. Удаление старого релиза Kafka (если есть)
+         echo "Deleting possible Helm locks..."
+         kubectl delete secret -l owner=helm,name=my-app --ignore-not-found || true
+         kubectl delete secret -l owner=helm,name=db --ignore-not-found || true
+
+         echo "Deleting old app deployments..."
+         kubectl delete deployment \
+           my-app-bonus-service-dep \
+           my-app-flight-service-dep \
+           my-app-ticket-service-dep \
+           my-app-auth-service-dep \
+           my-app-statistics-service-dep \
+           my-app-consumer-service-dep \
+           my-app-gateway-service-dep \
+           my-app-dips-client-dep \
+           my-app-kafka-broker-dep \
+           my-app-zookeeper-dep \
+           --ignore-not-found --force --grace-period=0 || true
+
+         echo "Deleting old db deployments..."
+         kubectl delete deployment \
+           authdb bonusdb flightdb ticketdb statisticsdb \
+           --ignore-not-found --force --grace-period=0 || true
+
+         echo "Deleting remaining pods in default namespace..."
+         kubectl delete pod --all --force --grace-period=0 || true
+
+         echo "Waiting after cleanup..."
+         sleep 30
+
+         echo "=== Pods after cleanup ==="
+         kubectl get pods || true
+       shell: bash
+
+     # 7. Удаление старого отдельного релиза Kafka (если он вдруг есть)
+     # В актуальной схеме Kafka разворачивается внутри релиза my-app, но этот блок оставлен для безопасности.
      - name: Remove old Kafka release if present
        run: |
          if helm list -q | grep -q '^kafka$'; then
            echo "Removing old Kafka release..."
-           helm uninstall kafka
+           helm uninstall kafka --wait=false || true
          fi
+       shell: bash
 
      # 8. Деплой баз данных (postgres-chart)
+     # Таймаут увеличен до 20 минут: после холодного старта кластера 10 минут часто мало.
      - name: Deploy PostgreSQL databases
        run: |
          helm upgrade --install db ./k8s/postgres-chart \
            -f ./k8s/postgres-chart/values.yaml \
-           --wait --timeout 10m
+           --wait --timeout 20m
+       shell: bash
 
+     # 9. Разблокировка релиза приложения перед деплоем
+     # Если предыдущий deploy прервался, Helm может оставить pending-upgrade/pending-install.
      - name: Force unlock my-app release
        run: |
          echo "Deleting Helm secrets for release 'my-app'..."
-         kubectl delete secret -l owner=helm,name=my-app --ignore-not-found
+         kubectl delete secret -l owner=helm,name=my-app --ignore-not-found || true
          echo "Attempting to uninstall any lingering release..."
-         helm uninstall my-app --ignore-not-found 2>/dev/null || true
+         helm uninstall my-app --ignore-not-found --wait=false || true
          echo "Release lock cleared."
        shell: bash
 
-     # 9. Деплой приложения с переопределением образа frontend
-     # Без этого chart может брать старый образ из values.yaml или не менять pod, если тег latest не изменился в spec.
+     # 10. Деплой приложения с переопределением всех образов backend и frontend
+     # Важно: теперь переопределяем не только dips-client, но и gateway/flight/ticket/bonus/auth/statistics/consumer.
+     # Это нужно, чтобы новые изменения: degradation, capacity, покупка нескольких билетов — точно попали в Kubernetes.
      - name: Deploy application services
        run: |
          helm upgrade --install my-app ./k8s/app-chart \
            -f ./k8s/app-chart/values.yaml \
+           --set services.bonus-service.container=cr.yandex/${{ env.REGISTRY_ID }}/bonus-service:${GITHUB_SHA} \
+           --set services.flight-service.container=cr.yandex/${{ env.REGISTRY_ID }}/flight-service:${GITHUB_SHA} \
+           --set services.ticket-service.container=cr.yandex/${{ env.REGISTRY_ID }}/ticket-service:${GITHUB_SHA} \
+           --set services.auth-service.container=cr.yandex/${{ env.REGISTRY_ID }}/auth-service:${GITHUB_SHA} \
+           --set services.gateway-service.container=cr.yandex/${{ env.REGISTRY_ID }}/gateway-service:${GITHUB_SHA} \
+           --set services.statistics-service.container=cr.yandex/${{ env.REGISTRY_ID }}/statistics-service:${GITHUB_SHA} \
+           --set services.consumer-service.container=cr.yandex/${{ env.REGISTRY_ID }}/consumer-service:${GITHUB_SHA} \
            --set services.dips-client.container=cr.yandex/${{ env.REGISTRY_ID }}/dips-client:${GITHUB_SHA} \
-           --wait --timeout 15m
+           --wait --timeout 20m
+       shell: bash
 
-     # 10. Применяем Ingress правила
+     # 11. Применяем Ingress правила
      - name: Apply Ingress rules
        run: kubectl apply -f k8s/app-chart/templates/Ingress.yaml
+       shell: bash
 
-     # 11. Ожидание готовности всех подов
+     # 12. Ожидание готовности всех pod'ов
      - name: Wait for all pods
-       run: kubectl wait --for=condition=ready pod --all --timeout=300s
+       run: kubectl wait --for=condition=ready pod --all --timeout=600s
+       shell: bash
 
-
-     # 12. Автоматическое наполнение демонстрационными данными
+     # 13. Автоматическое наполнение демонстрационными данными
      # SQL-файлы находятся в репозитории в database_seed/.
      # Runner после деплоя стримит их через kubectl exec прямо в PostgreSQL pod'ы.
      - name: Seed demo database data
@@ -144,13 +192,33 @@ jobs:
          ./database_seed/00_seed_all.sh
        shell: bash
 
-     # 13. Диагностика при сбое
+     # 14. Диагностика после успешного деплоя
+     # Этот блок поможет быстро проверить, что все backend-образы действительно новые и имеют SHA-тег.
+     - name: Show deployed resources
+       if: success()
+       run: |
+         echo "=== Pods ==="
+         kubectl get pods -o wide
+         echo "=== Deployments and images ==="
+         kubectl get deploy -o custom-columns=NAME:.metadata.name,IMAGE:.spec.template.spec.containers[0].image
+         echo "=== Helm releases ==="
+         helm list -a
+       shell: bash
+
+     # 15. Диагностика при сбое
      - name: Debug on failure
        if: failure()
        run: |
+         echo "=== Nodes ==="
+         kubectl get nodes -o wide || true
+         echo "=== Helm releases ==="
+         helm list -a || true
          echo "=== Pods ==="
-         kubectl get pods
+         kubectl get pods -o wide || true
          echo "=== Describe pods ==="
-         kubectl describe pods
-         echo "=== Logs (last 50 lines) ==="
-         kubectl logs --all-containers=true --tail=50 --selector app.kubernetes.io/part-of=simple-backend || true
+         kubectl describe pods || true
+         echo "=== Events ==="
+         kubectl get events --sort-by=.lastTimestamp | tail -100 || true
+         echo "=== Logs (last 100 lines) ==="
+         kubectl logs --all-containers=true --tail=100 --selector app.kubernetes.io/part-of=simple-backend || true
+       shell: bash

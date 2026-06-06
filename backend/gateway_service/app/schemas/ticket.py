@@ -3,7 +3,7 @@ from typing import Annotated
 from uuid import UUID
 
 from enums.status import TicketStatus
-from pydantic import BaseModel, conint, constr
+from pydantic import BaseModel, Field, conint, constr
 from schemas.bonus import PrivilegeShortInfo
 
 
@@ -22,7 +22,7 @@ class TicketResponse(BaseModel):
     fromAirport: str | None
     toAirport: str | None
     date: dt | str
-    price: Annotated[int, conint(ge=1)]
+    price: Annotated[int, conint(ge=0)]
     status: TicketStatus
 
     class Config:
@@ -35,6 +35,7 @@ class TicketPurchaseRequest(BaseModel):
     flightNumber: Annotated[str, constr(max_length=20)]
     price: Annotated[int, conint(ge=1)]
     paidFromBalance: bool
+    quantity: Annotated[int, conint(ge=1)] = 1
 
 
 class TicketPurchaseResponse(BaseModel):
@@ -48,6 +49,9 @@ class TicketPurchaseResponse(BaseModel):
     paidByBonuses: Annotated[int, conint(ge=0)]
     status: TicketStatus
     privilege: PrivilegeShortInfo
+    quantity: Annotated[int, conint(ge=1)] = 1
+    totalPrice: Annotated[int, conint(ge=0)] = 0
+    tickets: list[TicketResponse] = Field(default_factory=list)
 
     class Config:
         json_encoders = {

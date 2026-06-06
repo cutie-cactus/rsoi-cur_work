@@ -13,3 +13,5 @@ class FlightModel(Base):
     datetime = Column(DateTime(timezone=True), nullable=False)
     from_airport_id = Column(Integer, ForeignKey(AirportModel.id))
     to_airport_id = Column(Integer, ForeignKey(AirportModel.id))
+    capacity = Column(Integer, nullable=False, default=50)
+    available_seats = Column(Integer, nullable=False, default=50)

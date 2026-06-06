@@ -90,6 +90,7 @@ export function useFlightsTable() {
 
 	const handleUpdatePrivilege = async () => {
 		await fetchPrivilege();
+		await fetchFlights();
 	};
 
 	async function fetchFlights() {

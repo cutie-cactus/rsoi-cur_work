@@ -27,6 +27,8 @@ class FlightResponse(BaseModel):
     toAirport: str | None
     date: dt
     price: Annotated[int, conint(ge=1)]
+    capacity: Annotated[int, conint(ge=0)] = 0
+    availableSeats: Annotated[int, conint(ge=0)] = 0
 
     class Config:
         json_encoders = {
@@ -39,3 +41,8 @@ class PaginationResponse(BaseModel):
     pageSize: Annotated[int, conint(ge=1)]
     totalElements: Annotated[int, conint(ge=0)]
     items: list[FlightResponse]
+
+
+class FlightUpdate(BaseModel):
+    available_seats: Annotated[int, conint(ge=0)] | None = None
+    capacity: Annotated[int, conint(ge=0)] | None = None

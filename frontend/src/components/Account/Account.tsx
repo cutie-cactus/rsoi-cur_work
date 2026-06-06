@@ -92,10 +92,10 @@ export function Account({ user }: AccountProps) {
 										<div className="profile-panel-title">Список покупок</div>
 										<div className="profile-panel-subtitle">Активные билеты, возвраты и совершённые поездки</div>
 									</div>
-									<div className="profile-count-chip">{ userInfo?.tickets.length ?? 0 }</div>
+									<div className="profile-count-chip">{ userInfo?.ticketsUnavailable ? "—" : (userInfo?.tickets.length ?? 0) }</div>
 								</div>
 
-								<ProfilePurchaseList tickets={ userInfo?.tickets ?? [] } />
+								<ProfilePurchaseList tickets={ userInfo?.tickets ?? [] } unavailable={ userInfo?.ticketsUnavailable } message={ userInfo?.ticketsMessage } />
 							</section>
 						</div>
 

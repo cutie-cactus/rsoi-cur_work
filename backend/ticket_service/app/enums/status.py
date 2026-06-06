@@ -2,5 +2,5 @@ from enum import Enum
 
 
 class TicketStatus(str, Enum):
-    Paid = ("PAID",)
+    Paid = "PAID"
     Canceled = "CANCELED"

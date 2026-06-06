@@ -4,4 +4,6 @@ import { IPrivilege } from "../Bonus/IPrivilege"
 export interface IUserInfo {
 	tickets: ITicket[]
 	privilege: IPrivilege
+	ticketsUnavailable?: boolean
+	ticketsMessage?: string
 };

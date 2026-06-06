@@ -1,4 +1,5 @@
 import { IPrivilege } from "../Bonus/IPrivilege"
+import { ITicket } from "./ITicket"
 
 
 export interface ITicketResponse {
@@ -12,4 +13,7 @@ export interface ITicketResponse {
 	paidByBonuses: number
 	status: string
 	privilege: IPrivilege
+	quantity?: number
+	totalPrice?: number
+	tickets?: ITicket[]
 };

@@ -4,4 +4,6 @@ export interface IFlight {
 	toAirport: string
 	date: string
 	price: number
+	capacity: number
+	availableSeats: number
 };
