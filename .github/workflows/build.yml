@@ -77,21 +77,21 @@ jobs:
        run: |
          yc managed-kubernetes cluster get-credentials ${{ env.K8S_CLUSTER_ID }} --external --force
 
-     # 6. ConfigMap'ы со скриптами инициализации БД
-     - name: Create init-sql ConfigMaps
-       run: |
+#      # 6. ConfigMap'ы со скриптами инициализации БД
+#      - name: Create init-sql ConfigMaps
+#        run: |
 
-         kubectl delete deployment my-app-bonus-service-dep my-app-flight-service-dep my-app-ticket-service-dep my-app-auth-service-dep my-app-statistics-service-dep my-app-consumer-service-dep my-app-gateway-service-dep my-app-dips-client-dep
-#          kubectl delete deployment authdb bonusdb flightdb ticketdb statisticsdb
+#          kubectl delete deployment my-app-bonus-service-dep my-app-flight-service-dep my-app-ticket-service-dep my-app-auth-service-dep my-app-statistics-service-dep my-app-consumer-service-dep my-app-gateway-service-dep my-app-dips-client-dep
+# #          kubectl delete deployment authdb bonusdb flightdb ticketdb statisticsdb
 
-     - name: Force unlock db release
-       run: |
-         echo "Deleting Helm secrets for release 'db'..."
-         kubectl delete secret -l owner=helm,name=db --ignore-not-found
-         echo "Attempting to uninstall any lingering release..."
-         helm uninstall db --ignore-not-found 2>/dev/null || true
-         echo "Release lock cleared."
-       shell: bash
+#      - name: Force unlock db release
+#        run: |
+#          echo "Deleting Helm secrets for release 'db'..."
+#          kubectl delete secret -l owner=helm,name=db --ignore-not-found
+#          echo "Attempting to uninstall any lingering release..."
+#          helm uninstall db --ignore-not-found 2>/dev/null || true
+#          echo "Release lock cleared."
+#        shell: bash
 
      # 7. Удаление старого релиза Kafka (если есть)
      - name: Remove old Kafka release if present
